@@ -7,10 +7,10 @@ services:
     build:
       context: "."
       dockerfile: Dockerfile
-    container_name: discord-pr-bot
+    container_name: stats-bot
     command: yarn dev
     ports:
-      - "7070:7070"
+      - "5050:5050"
     volumes:
       - ./:/app/
     networks:
