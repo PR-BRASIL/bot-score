@@ -1,12 +1,12 @@
 import type { ChatInputCommandInteraction } from "discord.js";
 import { SlashCommandBuilder } from "discord.js";
 
-export const makeCommands = [
+export const slashCommands = [
   {
     data: new SlashCommandBuilder()
-      .setName("user information")
+      .setName("userinformation")
       .setDescription("get user information"),
-    method: async (interaction: ChatInputCommandInteraction) => {
+    async execute(interaction: ChatInputCommandInteraction) {
       await interaction.reply("test");
     },
   },
