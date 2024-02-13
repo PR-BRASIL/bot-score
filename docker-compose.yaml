@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  client:
+    env_file:
+      - .env
+    build:
+      context: "."
+      dockerfile: Dockerfile
+    container_name: discord-pr-bot
+    command: yarn dev
+    ports:
+      - "7070:7070"
+    volumes:
+      - ./:/app/
+    networks:
+      - pr-server_network
+
+networks:
+  pr-server_network:
+    name: pr-server-network
+    external: true
