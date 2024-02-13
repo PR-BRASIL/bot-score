@@ -1,3 +1,3 @@
-import { Client } from "discord.js";
+import type { Client } from "discord.js";
 
-export const makeCommands = (client: Client<boolean>) => {};
+export const makeCommands = (client: Client) => {};
