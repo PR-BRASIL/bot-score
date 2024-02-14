@@ -3,7 +3,7 @@ import type {
   GetUserInformationInput,
   GetUserInformationOutput,
 } from "../../domain/usecase/get-user-information";
-import type { GetUserInformationRepository } from "../protocols/get-user-information";
+import type { GetUserInformationRepository } from "../protocols/get-user-information-repository";
 
 export class DbGetUserInformation implements GetUserInformation {
   public constructor(

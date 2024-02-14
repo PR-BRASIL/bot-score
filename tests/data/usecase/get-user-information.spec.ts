@@ -1,4 +1,4 @@
-import { GetUserInformationRepositoryInput } from "../../../src/data/protocols/get-user-information";
+import { GetUserInformationRepositoryInput } from "../../../src/data/protocols/get-user-information-repository";
 import { DbGetUserInformation } from "../../../src/data/usecase/get-user-information";
 import { GetUserInformationInput } from "../../../src/domain/usecase/get-user-information";
 
