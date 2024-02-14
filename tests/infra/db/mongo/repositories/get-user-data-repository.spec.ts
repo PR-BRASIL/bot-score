@@ -11,30 +11,6 @@ const makeSut = () => {
   };
 };
 
-const fakeData: Array<GetUserInformationRepositoryOutput> = [
-  {
-    deaths: 1,
-    kills: 1,
-    name: "fake-name",
-    score: 1,
-    teamWorkScore: 1,
-  },
-  {
-    deaths: 1,
-    kills: 1,
-    name: "real-name",
-    score: 1,
-    teamWorkScore: 1,
-  },
-  {
-    deaths: 1,
-    kills: 1,
-    name: "test-name",
-    score: 1,
-    teamWorkScore: 1,
-  },
-];
-
 const fakeUsers = [
   {
     name: "williancc1557",
@@ -96,5 +72,15 @@ describe("MongoGetUserDataRepository", () => {
     });
 
     return expect(data).not.toBeTruthy();
+  });
+
+  test("should return user if name is close of correct", async () => {
+    const { sut } = makeSut();
+
+    const data = await sut.get({
+      nameOrHash: "will",
+    });
+
+    return expect(data).toStrictEqual(fakeUsers[0]);
   });
 });
