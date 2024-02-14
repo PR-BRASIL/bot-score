@@ -17,6 +17,11 @@ export class GetUserInformationCommand implements Command {
       nameOrHash: interaction.options.getString("hash-or-name"),
     });
 
+    if (!data) {
+      await interaction.reply("Usuário não encontrado!");
+      return;
+    }
+
     interaction.reply({ embeds: [this.makeEmbed(interaction, data)] });
   }
 
@@ -24,9 +29,39 @@ export class GetUserInformationCommand implements Command {
     interaction: ChatInputCommandInteraction,
     userData: GetUserInformationOutput
   ) {
-    const embed = new EmbedBuilder().setColor(0x00).setAuthor({
-      name: userData.name,
-    });
+    const embed = new EmbedBuilder()
+      .setColor(0x00)
+      .setAuthor({
+        name: "B.E Stats",
+        iconURL: interaction.guild.iconURL(),
+      })
+      .setThumbnail(interaction.guild.iconURL())
+      .setTitle(userData.name)
+      .setDescription(
+        `Aqui será listado algumas informações do jogador ${userData.name}`
+      )
+      .addFields(
+        {
+          name: "Score",
+          value: `${userData.score}`,
+          inline: true,
+        },
+        {
+          name: "TeamWorkScore",
+          value: `${userData.teamWorkScore}`,
+          inline: true,
+        },
+        {
+          name: "Kills",
+          value: `${userData.kills}`,
+          inline: true,
+        },
+        {
+          name: "Deaths",
+          value: `${userData.deaths}`,
+          inline: true,
+        }
+      );
 
     return embed;
   }
