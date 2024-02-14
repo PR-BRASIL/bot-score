@@ -13,8 +13,10 @@ export class GetUserInformationCommand implements Command {
   public async execute(
     interaction: ChatInputCommandInteraction
   ): Promise<void> {
+    console.log(interaction);
+
     const data = await this.getUserInformationRepository.get({
-      nameOrHash: interaction.options.getString("hash/name"),
+      nameOrHash: interaction.options.getString("hash-or-name"),
     });
 
     interaction.reply({ embeds: [this.makeEmbed(interaction, data)] });

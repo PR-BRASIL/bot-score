@@ -6,6 +6,7 @@
   "author": "Willian Cavalcanti Coelho",
   "license": "MIT",
   "devDependencies": {
+    "@shelf/jest-mongodb": "^4.2.0",
     "@techmmunity/eslint-config": "^5.2.3",
     "@types/axios": "^0.14.0",
     "@types/bcrypt": "^5.0.0",
