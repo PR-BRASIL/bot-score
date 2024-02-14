@@ -87,4 +87,14 @@ describe("MongoGetUserDataRepository", () => {
 
     return expect(data).toStrictEqual(fakeUsers[0]);
   });
+
+  test("should return null if hash is incorrect", async () => {
+    const { sut } = makeSut();
+
+    const data = await sut.get({
+      nameOrHash: "invalid_hash",
+    });
+
+    return expect(data).not.toBeTruthy();
+  });
 });
