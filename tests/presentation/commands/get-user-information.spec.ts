@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import { GetUserInformationInput } from "../../../src/domain/usecase/get-user-information";
 import { GetUserInformationCommand } from "../../../src/presentation/commands/get-user-information";
 
@@ -32,5 +32,13 @@ describe("GetUserInformation Command", () => {
     expect(getUserInformationRepository.get).toHaveBeenCalledWith({
       nameOrHash: fakeData.options.getString("hash-or-name"),
     });
+  });
+
+  test("should call reply with correct options", async () => {
+    const { sut } = makeSut();
+
+    await sut.execute(fakeData);
+
+    expect(fakeData.reply).toHaveBeenCalled();
   });
 });
