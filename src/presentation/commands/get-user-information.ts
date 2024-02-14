@@ -38,7 +38,7 @@ export class GetUserInformationCommand implements Command {
       .setThumbnail(interaction.guild.iconURL())
       .setTitle(userData.name)
       .setDescription(
-        `Aqui será listado algumas informações do jogador ${userData.name}`
+        `Aqui será listado algumas informações do jogador ${userData.name}\nOs pontos contabilizados são apenas de partidas no **Brasil Evolution**!`
       )
       .addFields(
         {
