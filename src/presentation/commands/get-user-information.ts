@@ -4,6 +4,7 @@ import type {
   GetUserInformation,
   GetUserInformationOutput,
 } from "../../domain/usecase/get-user-information";
+import { getPatent } from "../../domain/models/patents";
 
 export class GetUserInformationCommand implements Command {
   public constructor(
@@ -42,26 +43,34 @@ export class GetUserInformationCommand implements Command {
       )
       .addFields(
         {
-          name: "Score",
+          name: ":shield: Patente",
+          value: getPatent(userData.score),
+          inline: true,
+        },
+        {
+          name: ":military_medal: Score",
           value: `${userData.score}`,
           inline: true,
         },
         {
-          name: "TeamWorkScore",
+          name: ":military_helmet: TeamWorkScore",
           value: `${userData.teamWorkScore}`,
           inline: true,
         },
         {
-          name: "Kills",
+          name: ":cocktail: Kills",
           value: `${userData.kills}`,
           inline: true,
         },
         {
-          name: "Deaths",
+          name: ":skull_crossbones: Deaths",
           value: `${userData.deaths}`,
           inline: true,
         }
-      );
+      )
+      .setFooter({
+        text: "Next level: 	[▋▋▋▋▋▋                                 ] (not implemented)",
+      });
 
     return embed;
   }
