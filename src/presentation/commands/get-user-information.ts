@@ -37,16 +37,11 @@ export class GetUserInformationCommand implements Command {
         iconURL: interaction.guild.iconURL(),
       })
       .setThumbnail(interaction.guild.iconURL())
-      .setTitle(userData.name)
+      .setTitle(userData.name + " ・ " + `**${getPatent(userData.score)}**`)
       .setDescription(
         `Aqui será listado algumas informações do jogador ${userData.name}\nOs pontos contabilizados são apenas de partidas no **Brasil Evolution**!`
       )
       .addFields(
-        {
-          name: ":shield: Patente",
-          value: getPatent(userData.score),
-          inline: true,
-        },
         {
           name: ":military_medal: Score",
           value: `${userData.score}`,
