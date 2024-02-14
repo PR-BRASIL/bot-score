@@ -14,8 +14,7 @@ export const slashCommands = [
           .setRequired(true)
       ),
     execute: async (interaction: ChatInputCommandInteraction) => {
-      interaction.reply(interaction.options.getString("hash-or-name"));
-      // await makeGetUserInformationCommand().execute(interaction);
+      await makeGetUserInformationCommand().execute(interaction);
     },
   },
 ];
