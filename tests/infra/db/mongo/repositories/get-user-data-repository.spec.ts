@@ -22,10 +22,19 @@ const fakeUsers = [
     score: { $numberInt: "261" },
   },
   {
-    name: "DE_BOA demolidor__",
+    name: "demolidor",
     ip: "111.111.111.11",
     teamWorkScore: { $numberInt: "-61" },
     hash: "73283f1161034cc1b582a084f2091768",
+    kills: { $numberInt: "0" },
+    deaths: { $numberInt: "1" },
+    score: { $numberInt: "1" },
+  },
+  {
+    name: "demolidor12345",
+    ip: "111.111.111.11",
+    teamWorkScore: { $numberInt: "-61" },
+    hash: "73283f1161034aa1b582a084f2091768",
     kills: { $numberInt: "0" },
     deaths: { $numberInt: "1" },
     score: { $numberInt: "1" },
@@ -51,7 +60,7 @@ describe("MongoGetUserDataRepository", () => {
       nameOrHash: "williancc1557",
     });
 
-    return expect(data).toStrictEqual(fakeUsers[0]);
+    expect(data).toStrictEqual(fakeUsers[0]);
   });
 
   test("should return user if hash is correct", async () => {
@@ -61,7 +70,7 @@ describe("MongoGetUserDataRepository", () => {
       nameOrHash: "34feb10c8f184946976acb714899b6bd",
     });
 
-    return expect(data).toStrictEqual(fakeUsers[0]);
+    expect(data).toStrictEqual(fakeUsers[0]);
   });
 
   test("should return null if hash is incorrect", async () => {
@@ -71,7 +80,7 @@ describe("MongoGetUserDataRepository", () => {
       nameOrHash: "invalid_hash",
     });
 
-    return expect(data).not.toBeTruthy();
+    expect(data).not.toBeTruthy();
   });
 
   test("should return user if name is close of correct", async () => {
@@ -81,6 +90,16 @@ describe("MongoGetUserDataRepository", () => {
       nameOrHash: "will",
     });
 
-    return expect(data).toStrictEqual(fakeUsers[0]);
+    expect(data).toStrictEqual(fakeUsers[0]);
+  });
+
+  test("should return user if the name is the same as provided", async () => {
+    const { sut } = makeSut();
+
+    const data = await sut.get({
+      nameOrHash: "demolidor",
+    });
+
+    expect(data).toStrictEqual(fakeUsers[1]);
   });
 });

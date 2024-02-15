@@ -23,6 +23,9 @@ export class MongoSaveUserDataRepository
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     if (users.length == 1) return users[0];
 
+    const findUser = users.find((a) => data.nameOrHash == a.name);
+    if (findUser) return findUser;
+
     const user = await collection.findOne<GetUserInformationRepositoryOutput>({
       hash: data.nameOrHash,
     });
