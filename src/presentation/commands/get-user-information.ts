@@ -23,10 +23,10 @@ export class GetUserInformationCommand implements Command {
       return;
     }
 
-    interaction.reply({ embeds: [this.makeEmbed(interaction, data)] });
+    interaction.reply({ embeds: [await this.makeEmbed(interaction, data)] });
   }
 
-  private makeEmbed(
+  private async makeEmbed(
     interaction: ChatInputCommandInteraction,
     userData: GetUserInformationOutput
   ) {
@@ -37,7 +37,9 @@ export class GetUserInformationCommand implements Command {
         iconURL: interaction.guild.iconURL(),
       })
       .setThumbnail(interaction.guild.iconURL())
-      .setTitle(userData.name + " ・ " + `**${getPatent(userData.score)}**`)
+      .setTitle(
+        userData.name + " ・ " + `**${await getPatent(userData.score)}**`
+      )
       .setDescription(
         `Aqui será listado algumas informações do jogador ${userData.name}\nOs pontos contabilizados são apenas de partidas no **Brasil Evolution**!`
       )
