@@ -8,6 +8,7 @@ export interface GetUserInformationOutput {
   kills: number;
   deaths: number;
   score: number;
+  rank: number;
 }
 
 export interface GetUserInformation {

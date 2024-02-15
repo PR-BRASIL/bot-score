@@ -64,6 +64,10 @@ export class GetUserInformationCommand implements Command {
           name: ":skull_crossbones: Deaths",
           value: `${userData.deaths}`,
           inline: true,
+        },
+        {
+          name: ":bar_chart: Rank",
+          value: `${userData.rank}`,
         }
       )
       .setFooter({
