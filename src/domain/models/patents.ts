@@ -2,24 +2,20 @@
 import { mongoHelper } from "../../infra/db/mongodb/helpers/mongo-helper";
 import { logger } from "../../utils/logger";
 
+interface Patent {
+  text: string;
+  score: number;
+}
+
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 export const getPatent = async (score: number) => {
-  try {
-    interface Patent {
-      text: string;
-      score: number;
-    }
-    const collection = await mongoHelper.getCollection("config");
-    const patents: Patent = (await collection.find<any>({}).toArray())[0];
+  const collection = await mongoHelper.getCollection("config");
+  const patents = await collection.find<Patent>({}).toArray();
+  const patentIndex = patents.findIndex((p) => p.score > score) - 1;
 
-    const sortedPatents = Object.entries(patents)
-      .filter(([, patent]) => patent.score !== undefined)
-      .sort((a, b) => b[1].score - a[1].score);
+  const patent = patents.sort((a, b) => a.score - b.score)[patentIndex];
 
-    for (const [field, patent] of sortedPatents) {
-      if (score > patent.score) return patent.text;
-    }
-  } catch (error) {
-    logger.error("Error fetching patents:", error);
-  }
+  if (!patent) return patents[patents.length - 1].text;
+
+  return patent.text;
 };
