@@ -68,6 +68,7 @@ export class GetUserInformationCommand implements Command {
         {
           name: ":bar_chart: Rank",
           value: `#${userData.rank}`,
+          inline: true,
         }
       )
       .setFooter({
