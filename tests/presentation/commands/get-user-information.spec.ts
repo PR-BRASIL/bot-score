@@ -1,6 +1,20 @@
 import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import { GetUserInformationInput } from "../../../src/domain/usecase/get-user-information";
 import { GetUserInformationCommand } from "../../../src/presentation/commands/get-user-information";
+jest.mock("../../../src/utils/patents", () => ({
+  getPatent: () => jest.fn(),
+}));
+jest.mock("discord.js", () => ({
+  EmbedBuilder: jest.fn().mockImplementation(() => ({
+    setColor: jest.fn().mockReturnThis(),
+    setAuthor: jest.fn().mockReturnThis(),
+    setThumbnail: jest.fn().mockReturnThis(),
+    setTitle: jest.fn().mockReturnThis(),
+    setDescription: jest.fn().mockReturnThis(),
+    addFields: jest.fn().mockReturnThis(),
+    setFooter: jest.fn().mockReturnThis(),
+  })),
+}));
 
 const makeSut = () => {
   const getUserInformationRepository = {
@@ -21,6 +35,9 @@ const fakeData: any = {
     getString: jest.fn().mockReturnValue("hash-or-name"),
   },
   reply: jest.fn(),
+  guild: {
+    iconURL: jest.fn().mockReturnValue("icon-url"),
+  },
 } as unknown as ChatInputCommandInteraction;
 
 describe("GetUserInformation Command", () => {
