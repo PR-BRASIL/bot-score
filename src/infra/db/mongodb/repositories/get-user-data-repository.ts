@@ -47,21 +47,14 @@ export class MongoSaveUserDataRepository
   }
 
   private async getUserRank(user: User): Promise<number> {
-    const pipeline = [
-      {
-        $sort: { ["score"]: -1 },
-      },
-      {
-        $match: { hash: user.hash },
-      },
-      {
-        $count: "position",
-      },
-    ];
-
-    const result = await this.collection.aggregate(pipeline).toArray();
+    const result = await this.collection
+      .find({})
+      .sort({
+        score: -1,
+      })
+      .toArray();
 
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    return result[0].position + 1;
+    return result.findIndex((a) => a.hash == user.hash) + 1;
   }
 }

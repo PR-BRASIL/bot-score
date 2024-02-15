@@ -41,6 +41,8 @@ const fakeData: any = {
 } as unknown as ChatInputCommandInteraction;
 
 describe("GetUserInformation Command", () => {
+  afterEach(() => jest.clearAllMocks());
+
   test("should call getUserInformationRepository with correct values", async () => {
     const { sut, getUserInformationRepository } = makeSut();
 

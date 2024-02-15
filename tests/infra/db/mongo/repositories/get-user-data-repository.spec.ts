@@ -1,4 +1,3 @@
-import { GetUserInformationRepositoryOutput } from "../../../../../src/data/protocols/get-user-information-repository";
 import { MongoSaveUserDataRepository } from "../../../../../src/infra/db/mongodb/repositories/get-user-data-repository";
 import { mongoHelper } from "../../../../../src/infra/db/mongodb/helpers/mongo-helper";
 import { Collection, Document, ObjectId } from "mongodb";
@@ -46,22 +45,15 @@ describe("MongoGetUserDataRepository", () => {
   let userCollection: Collection<Document>;
 
   const getUserRank = async (user: User): Promise<number> => {
-    const pipeline = [
-      {
-        $sort: { ["score"]: -1 },
-      },
-      {
-        $match: { hash: user.hash },
-      },
-      {
-        $count: "position",
-      },
-    ];
-
-    const result = await userCollection.aggregate(pipeline).toArray();
+    const result = await userCollection
+      .find({})
+      .sort({
+        score: -1,
+      })
+      .toArray();
 
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    return result[0].position + 1;
+    return result.findIndex((a) => a.hash == user.hash) + 1;
   };
 
   beforeAll(async () => {
@@ -71,6 +63,7 @@ describe("MongoGetUserDataRepository", () => {
   });
 
   afterAll(async () => {
+    await userCollection.deleteMany({});
     await mongoHelper.disconnect();
   });
 
@@ -81,9 +74,10 @@ describe("MongoGetUserDataRepository", () => {
       nameOrHash: "williancc1557",
     });
 
+    const rank = await getUserRank(fakeUsers[0] as User);
     expect(data).toStrictEqual({
       ...fakeUsers[0],
-      rank: await getUserRank(fakeUsers[0] as User),
+      rank,
     });
   });
 
@@ -94,9 +88,10 @@ describe("MongoGetUserDataRepository", () => {
       nameOrHash: "34feb10c8f184946976acb714899b6bd",
     });
 
+    const rank = await getUserRank(fakeUsers[0] as User);
     expect(data).toStrictEqual({
       ...fakeUsers[0],
-      rank: await getUserRank(fakeUsers[0] as User),
+      rank,
     });
   });
 
@@ -117,9 +112,10 @@ describe("MongoGetUserDataRepository", () => {
       nameOrHash: "will",
     });
 
+    const rank = await getUserRank(fakeUsers[0] as User);
     expect(data).toStrictEqual({
       ...fakeUsers[0],
-      rank: await getUserRank(fakeUsers[0] as User),
+      rank,
     });
   });
 
@@ -130,9 +126,10 @@ describe("MongoGetUserDataRepository", () => {
       nameOrHash: "demolidor",
     });
 
+    const rank = await getUserRank(fakeUsers[1] as User);
     expect(data).toStrictEqual({
       ...fakeUsers[1],
-      rank: await getUserRank(fakeUsers[1] as User),
+      rank,
     });
   });
 });
