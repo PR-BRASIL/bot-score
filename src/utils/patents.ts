@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { mongoHelper } from "../../infra/db/mongodb/helpers/mongo-helper";
-import { logger } from "../../utils/logger";
+import { mongoHelper } from "../infra/db/mongodb/helpers/mongo-helper";
 
 interface Patent {
   text: string;
@@ -9,7 +8,7 @@ interface Patent {
 
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 export const getPatent = async (score: number) => {
-  const collection = await mongoHelper.getCollection("config");
+  const collection = await mongoHelper.getCollection("patents");
   const patents = await collection.find<Patent>({}).toArray();
   const patentIndex = patents.findIndex((p) => p.score > score) - 1;
 

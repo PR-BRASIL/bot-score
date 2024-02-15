@@ -4,7 +4,8 @@ import type {
   GetUserInformation,
   GetUserInformationOutput,
 } from "../../domain/usecase/get-user-information";
-import { getPatent } from "../../domain/models/patents";
+import { getPatent } from "../../utils/patents";
+import { GetPatentProgress } from "../../utils/getPatentProgress";
 
 export class GetUserInformationCommand implements Command {
   public constructor(
@@ -66,7 +67,7 @@ export class GetUserInformationCommand implements Command {
         }
       )
       .setFooter({
-        text: "Next level: 	[▋▋▋▋▋▋                                 ] (not implemented)",
+        text: await new GetPatentProgress().get(userData.score),
       });
 
     return embed;
