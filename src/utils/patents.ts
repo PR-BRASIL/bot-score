@@ -10,11 +10,10 @@ interface Patent {
 export const getPatent = async (score: number) => {
   const collection = await mongoHelper.getCollection("patents");
   const patents = await collection.find<Patent>({}).toArray();
-  const patentIndex = patents.findIndex((p) => p.score > score) - 1;
+  const patentsWithSort = patents.sort((a, b) => a.score - b.score);
+  const patentIndex = patentsWithSort.findIndex((p) => p.score > score) - 1;
 
-  const patent = patents.sort((a, b) => a.score - b.score)[patentIndex];
+  if (!patentsWithSort) return patents[patents.length - 1].text;
 
-  if (!patent) return patents[patents.length - 1].text;
-
-  return patent.text;
+  return patentsWithSort[patentIndex].text;
 };

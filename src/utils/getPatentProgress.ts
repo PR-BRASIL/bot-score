@@ -6,19 +6,19 @@ export class GetPatentProgress {
   public async get(score: number) {
     const collection = await mongoHelper.getCollection("patents");
     const patents = await collection.find<Patent>({}).toArray();
-    const patentIndex = patents.findIndex((p) => p.score > score);
 
-    const patent = patents.sort((a, b) => a.score - b.score);
+    const patentWithSort = patents.sort((a, b) => a.score - b.score);
+    const patentIndex = patentWithSort.findIndex((p) => p.score > score);
 
     const REPEAT = 20;
-    if (!patent[patentIndex - 1])
+    if (!patentWithSort[patentIndex - 1])
       return "[" + "▋".repeat(REPEAT) + "] (Max Level)";
 
-    const nextScore = !patent
+    const nextScore = !patentWithSort
       ? patents[patents.length - 1].score
-      : patent[patentIndex].score;
+      : patentWithSort[patentIndex].score;
 
-    const actualPatenScore = patent[patentIndex - 1].score;
+    const actualPatenScore = patentWithSort[patentIndex - 1].score;
 
     return this.getProgressBar(
       score - actualPatenScore,
