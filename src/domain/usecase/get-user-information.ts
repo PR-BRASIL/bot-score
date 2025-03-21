@@ -1,3 +1,5 @@
+import { User } from "../models/user";
+
 export interface GetUserInformationInput {
   nameOrHash: string;
 }
@@ -12,5 +14,9 @@ export interface GetUserInformationOutput {
 }
 
 export interface GetUserInformation {
-  get: (data: GetUserInformationInput) => Promise<GetUserInformationOutput>;
+  get(params: { nameOrHash: string }): Promise<GetUserInformationOutput | null>;
+}
+
+export interface GetTopPlayers {
+  getTopPlayers(limit: number): Promise<User[]>;
 }
