@@ -8,7 +8,7 @@ export const deployCommand = async () => {
 
   const rest = new REST().setToken(env.token);
   const clientId = env.clientId;
-  const guildId = "1201252603191906466";
+  const guildId = env.guildId;
   const data = await rest
     .put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
     .catch((err) => {

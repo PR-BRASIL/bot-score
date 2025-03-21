@@ -9,4 +9,5 @@ export const env = {
   apiUrl: process.env.API_URL || "http://localhost:8080",
   mongoUrl: process.env.MONGO_URL || "mongodb://0.0.0.0:27017/database",
   clientId: process.env.CLIENT_ID || "1207068522430205952",
+  guildId: process.env.GUILD_ID || "1110388609074344017",
 };
