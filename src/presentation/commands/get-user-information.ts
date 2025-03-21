@@ -49,27 +49,27 @@ export class GetUserInformationCommand implements Command {
         {
           name: "⭐ Pontuação Total",
           value: `\`${userData.score.toLocaleString()}\``,
-          inline: true,
+          inline: false,
         },
         {
           name: "🤝 Trabalho em Equipe",
           value: `\`${userData.teamWorkScore.toLocaleString()}\``,
-          inline: true,
+          inline: false,
         },
         {
           name: "🔫 Eliminações",
           value: `\`${userData.kills.toLocaleString()}\``,
-          inline: true,
+          inline: false,
         },
         {
           name: "💀 Mortes",
           value: `\`${userData.deaths.toLocaleString()}\``,
-          inline: true,
+          inline: false,
         },
         {
           name: "🏆 Posição no Ranking",
           value: `#\`${userData.rank.toLocaleString()}\``,
-          inline: true,
+          inline: false,
         }
       )
       .setFooter({
