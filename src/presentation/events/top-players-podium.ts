@@ -22,27 +22,20 @@ export class TopPlayersPodium {
       env.topPlayersPodiumChannelId
     ) as TextChannel;
     if (!channel) {
-      console.error("Channel not found!");
       return;
     }
-
-    console.log("rodou");
 
     let message;
     if (this.messageId) {
       try {
         message = await channel.messages.fetch(this.messageId);
       } catch (error) {
-        console.error("Message not found, creating a new one:", error);
         this.messageId = null;
       }
     }
 
-    console.log("rodou 2");
-
     const topPlayers = await this.getTopPlayers.getTopPlayers(6);
     if (!topPlayers || topPlayers.length === 0) {
-      console.error("No top players found!");
       return;
     }
 
@@ -54,7 +47,7 @@ export class TopPlayersPodium {
       })
       .setTitle("🏆 Top 6 Melhores Jogadores")
       .setDescription(
-        "Ranking dos melhores jogadores do Reality Brasil!\nAtualizado a cada 30 minutos."
+        "Ranking dos melhores jogadores do Reality Brasil!\nUtilize o comando `/stats` para ver as informações de um jogador específico."
       )
       .setThumbnail(channel.guild.iconURL() || null)
       .setTimestamp()
@@ -65,14 +58,12 @@ export class TopPlayersPodium {
     // Top 3 players with special formatting
     const [first, second, third, ...rest] = topPlayers;
 
-    console.log("rodou 3");
-
     if (first) {
       const firstPatent = await getPatent(first.score);
       const progress = await new GetPatentProgress().get(first.score);
       embed.addFields({
-        name: `👑 1º Lugar - ${first.name}`,
-        value: `> Patente: **${firstPatent}**\n> Score: **${first.score}**\n> Teamwork: **${first.teamWorkScore}**\n> K/D: **${first.kills}/${first.deaths}**\n> ${progress}`,
+        name: `👑 1º Lugar - ${first.name} ・ **${firstPatent}**`,
+        value: `> Score: **${first.score}**\n> Teamwork: **${first.teamWorkScore}**\n> K/D: **${first.kills}/${first.deaths}**\n> ${progress}`,
         inline: false,
       });
     }
@@ -80,8 +71,8 @@ export class TopPlayersPodium {
     if (second) {
       const secondPatent = await getPatent(second.score);
       embed.addFields({
-        name: `🥈 2º Lugar - ${second.name}`,
-        value: `> Patente: **${secondPatent}**\n> Score: **${second.score}**\n> Teamwork: **${second.teamWorkScore}**\n> K/D: **${second.kills}/${second.deaths}**`,
+        name: `🥈 2º Lugar - ${second.name} ・ **${secondPatent}**`,
+        value: `> Score: **${second.score}**\n> Teamwork: **${second.teamWorkScore}**\n> K/D: **${second.kills}/${second.deaths}**`,
         inline: false,
       });
     }
@@ -89,8 +80,8 @@ export class TopPlayersPodium {
     if (third) {
       const thirdPatent = await getPatent(third.score);
       embed.addFields({
-        name: `🥉 3º Lugar - ${third.name}`,
-        value: `> Patente: **${thirdPatent}**\n> Score: **${third.score}**\n> Teamwork: **${third.teamWorkScore}**\n> K/D: **${third.kills}/${third.deaths}**`,
+        name: `🥉 3º Lugar - ${third.name} ・ **${thirdPatent}**`,
+        value: `> Score: **${third.score}**\n> Teamwork: **${third.teamWorkScore}**\n> K/D: **${third.kills}/${third.deaths}**`,
         inline: false,
       });
     }
@@ -98,8 +89,8 @@ export class TopPlayersPodium {
     for (const player of rest) {
       const patent = await getPatent(player.score);
       embed.addFields({
-        name: `${player.name}`,
-        value: `> Patente: **${patent}**\n> Score: **${player.score}**\n> Teamwork: **${player.teamWorkScore}**\n> K/D: **${player.kills}/${player.deaths}**`,
+        name: `${player.name} ・ **${patent}**`,
+        value: `> Score: **${player.score}**\n> Teamwork: **${player.teamWorkScore}**\n> K/D: **${player.kills}/${player.deaths}**`,
         inline: false,
       });
     }
@@ -108,8 +99,6 @@ export class TopPlayersPodium {
       text: `Reality Brasil ・ ${new Date().toLocaleDateString("pt-BR")}`,
       iconURL: channel.guild.iconURL() || undefined,
     });
-
-    console.log("rodou 5");
 
     if (message) {
       await message.edit({ embeds: [embed] });
