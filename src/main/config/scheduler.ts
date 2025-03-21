@@ -9,8 +9,8 @@ export function scheduleTopPlayersPodium(client: Client): void {
   const getUserInformation = new MongoGetUserInformationRepository();
   const podium = new TopPlayersPodium(getUserInformation);
 
-  // every 10 seconds
-  cron.schedule("*/10 * * * * *", async () => {
+  // every 10 minutes
+  cron.schedule("*/10 * * * *", async () => {
     console.log("Updating top players podium...");
     await podium.updatePodium(client);
   });
@@ -20,11 +20,9 @@ export function scheduleTopClansPodium(client: Client): void {
   const getUserInformation = new MongoGetUserInformationRepository();
   const podium = new TopClansPodium(getUserInformation);
 
-  // every 10 seconds
-  cron.schedule("*/10 * * * * *", async () => {
+  // every 10 minutes
+  cron.schedule("*/10 * * * *", async () => {
     console.log("Updating top clans podium...");
     await podium.updatePodium(client);
   });
 }
-
-// /30
