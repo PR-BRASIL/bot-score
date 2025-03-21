@@ -1,4 +1,9 @@
-import { Client, TextChannel, EmbedBuilder } from "discord.js";
+import {
+  Client,
+  TextChannel,
+  EmbedBuilder,
+  RESTJSONErrorCodes,
+} from "discord.js";
 import type { GetTopPlayers } from "../../domain/usecase/get-user-information";
 import { env } from "../../main/config/env";
 import { getPatent } from "../../utils/patents";
@@ -35,7 +40,7 @@ export class TopPlayersPodium {
 
     console.log("rodou 2");
 
-    const topPlayers = await this.getTopPlayers.getTopPlayers(20);
+    const topPlayers = await this.getTopPlayers.getTopPlayers(6);
     if (!topPlayers || topPlayers.length === 0) {
       console.error("No top players found!");
       return;
@@ -47,12 +52,15 @@ export class TopPlayersPodium {
         name: "Reality Brasil",
         iconURL: channel.guild.iconURL() || undefined,
       })
-      .setTitle("🏆 Top 20 Jogadores")
+      .setTitle("🏆 Top 6 Melhores Jogadores")
       .setDescription(
         "Ranking dos melhores jogadores do Reality Brasil!\nAtualizado a cada 30 minutos."
       )
       .setThumbnail(channel.guild.iconURL() || null)
-      .setTimestamp();
+      .setTimestamp()
+      .setImage(
+        "https://media.discordapp.net/attachments/1162222580644708372/1274439425354371072/Capa_GitBook.png?ex=67df05b4&is=67ddb434&hm=e7f9eb86c1d74c0e1de0414f3dab11023f0820ea8431edfe0812e5afe80de930&=&format=webp&quality=lossless"
+      );
 
     // Top 3 players with special formatting
     const [first, second, third, ...rest] = topPlayers;
@@ -87,27 +95,14 @@ export class TopPlayersPodium {
       });
     }
 
-    console.log("rodou 4");
-
-    // Remaining players
-    // if (rest.length > 0) {
-    //   const restOfPlayers = await Promise.all(
-    //     rest.map(async (player, index) => {
-    //       const patent = await getPatent(player.score);
-    //       return `\`${index + 4}.\` **${player.name}** ・ ${patent}\n> Score: ${
-    //         player.score
-    //       } ・ TWS: ${player.teamWorkScore} ・ K/D: ${player.kills}/${
-    //         player.deaths
-    //       }`;
-    //     })
-    //   );
-
-    //   embed.addFields({
-    //     name: "📊 Classificação",
-    //     value: restOfPlayers.join("\n"),
-    //     inline: false,
-    //   });
-    // }
+    for (const player of rest) {
+      const patent = await getPatent(player.score);
+      embed.addFields({
+        name: `${player.name}`,
+        value: `> Patente: **${patent}**\n> Score: **${player.score}**\n> TWS: **${player.teamWorkScore}**\n> K/D: **${player.kills}/${player.deaths}**`,
+        inline: false,
+      });
+    }
 
     embed.setFooter({
       text: `Reality Brasil ・ ${new Date().toLocaleDateString("pt-BR")}`,
