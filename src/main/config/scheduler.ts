@@ -6,8 +6,8 @@ export function scheduleTopPlayersPodium(client: Client): void {
   const getUserInformation = new MongoGetUserInformationRepository();
   const podium = new TopPlayersPodium(getUserInformation);
 
-  // every 1 minute
-  cron.schedule("* * * * *", async () => {
+  // every 10 seconds
+  cron.schedule("*/10 * * * * *", async () => {
     console.log("Updating top players podium...");
     await podium.updatePodium(client);
   });
