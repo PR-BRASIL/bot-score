@@ -10,6 +10,5 @@ export const env = {
   mongoUrl: process.env.MONGO_URL || "mongodb://0.0.0.0:27017/database",
   clientId: process.env.CLIENT_ID || "1207068522430205952",
   guildId: process.env.GUILD_ID || "1110388609074344017",
-  topPlayersPodiumChannelId:
-    process.env.TOP_PLAYERS_PODIUM_CHANNEL_ID || "1207068522430205952",
+  topPlayersPodiumChannelId: process.env.TOP_PLAYERS_PODIUM_CHANNEL_ID,
 };
