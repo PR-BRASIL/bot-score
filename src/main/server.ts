@@ -2,7 +2,10 @@ import { mongoHelper } from "../infra/db/mongodb/helpers/mongo-helper";
 import { logger } from "../utils/logger";
 import { client } from "./config/app";
 import { env } from "./config/env";
-import { scheduleTopPlayersPodium } from "./config/scheduler";
+import {
+  scheduleTopPlayersPodium,
+  scheduleTopClansPodium,
+} from "./config/scheduler";
 
 client.on("ready", async () => {
   let mongoConectionCheck = true;
@@ -11,6 +14,7 @@ client.on("ready", async () => {
     .connect(env.mongoUrl)
     .then(() => {
       scheduleTopPlayersPodium(client);
+      scheduleTopClansPodium(client);
       logger.info("mongoDB started");
     })
     .catch((err) => {

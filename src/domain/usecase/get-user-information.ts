@@ -20,3 +20,17 @@ export interface GetUserInformation {
 export interface GetTopPlayers {
   getTopPlayers(limit: number): Promise<User[]>;
 }
+
+export interface Clan {
+  name: string;
+  memberCount: number;
+  totalScore: number;
+  totalTeamWorkScore: number;
+  totalKills: number;
+  totalDeaths: number;
+  members: User[];
+}
+
+export interface GetTopClans {
+  getTopClans(limit: number): Promise<Clan[]>;
+}

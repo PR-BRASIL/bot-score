@@ -11,4 +11,5 @@ export const env = {
   clientId: process.env.CLIENT_ID || "1207068522430205952",
   guildId: process.env.GUILD_ID || "1110388609074344017",
   topPlayersPodiumChannelId: process.env.TOP_PLAYERS_PODIUM_CHANNEL_ID,
+  topClansPodiumChannelId: process.env.TOP_CLANS_PODIUM_CHANNEL_ID,
 };
