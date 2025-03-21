@@ -6,6 +6,7 @@ import {
   scheduleTopPlayersPodium,
   scheduleTopClansPodium,
 } from "./config/scheduler";
+import { setupOneTimeEvents } from "./config/onetime-events";
 
 client.on("ready", async () => {
   let mongoConectionCheck = true;
@@ -15,6 +16,7 @@ client.on("ready", async () => {
     .then(() => {
       scheduleTopPlayersPodium(client);
       scheduleTopClansPodium(client);
+      setupOneTimeEvents(client);
       logger.info("mongoDB started");
     })
     .catch((err) => {
