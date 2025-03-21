@@ -20,6 +20,4 @@ for (const command of slashCommands) {
 makeInteractionEvents(client);
 deployCommand();
 
-export const clientSocket = io(env.apiUrl);
-
 export { client };
