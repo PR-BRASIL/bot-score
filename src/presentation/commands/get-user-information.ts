@@ -32,9 +32,9 @@ export class GetUserInformationCommand implements Command {
     userData: GetUserInformationOutput
   ) {
     const embed = new EmbedBuilder()
-      .setColor(0x00)
+      .setColor(0xffffff)
       .setAuthor({
-        name: "B.E Stats",
+        name: "RB Status",
         iconURL: interaction.guild.iconURL(),
       })
       .setThumbnail(interaction.guild.iconURL())
@@ -42,7 +42,7 @@ export class GetUserInformationCommand implements Command {
         userData.name + " ・ " + `**${await getPatent(userData.score)}**`
       )
       .setDescription(
-        `Aqui será listado algumas informações do jogador ${userData.name}\nOs pontos contabilizados são apenas de partidas no **Brasil Evolution**!`
+        `Aqui será listado algumas informações do jogador ${userData.name}\nOs pontos contabilizados são apenas de partidas no **Reality Brasil**!`
       )
       .addFields(
         {
