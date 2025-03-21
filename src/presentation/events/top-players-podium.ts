@@ -47,7 +47,7 @@ export class TopPlayersPodium {
     }
 
     const embed = new EmbedBuilder()
-      .setColor(0x2b2d31)
+      .setColor(0xffd700)
       .setAuthor({
         name: "Reality Brasil",
         iconURL: channel.guild.iconURL() || undefined,
@@ -72,7 +72,7 @@ export class TopPlayersPodium {
       const progress = await new GetPatentProgress().get(first.score);
       embed.addFields({
         name: `👑 1º Lugar - ${first.name}`,
-        value: `> Patente: **${firstPatent}**\n> Score: **${first.score}**\n> TWS: **${first.teamWorkScore}**\n> K/D: **${first.kills}/${first.deaths}**\n> ${progress}`,
+        value: `> Patente: **${firstPatent}**\n> Score: **${first.score}**\n> Teamwork: **${first.teamWorkScore}**\n> K/D: **${first.kills}/${first.deaths}**\n> ${progress}`,
         inline: false,
       });
     }
@@ -81,7 +81,7 @@ export class TopPlayersPodium {
       const secondPatent = await getPatent(second.score);
       embed.addFields({
         name: `🥈 2º Lugar - ${second.name}`,
-        value: `> Patente: **${secondPatent}**\n> Score: **${second.score}**\n> TWS: **${second.teamWorkScore}**\n> K/D: **${second.kills}/${second.deaths}**`,
+        value: `> Patente: **${secondPatent}**\n> Score: **${second.score}**\n> Teamwork: **${second.teamWorkScore}**\n> K/D: **${second.kills}/${second.deaths}**`,
         inline: false,
       });
     }
@@ -90,7 +90,7 @@ export class TopPlayersPodium {
       const thirdPatent = await getPatent(third.score);
       embed.addFields({
         name: `🥉 3º Lugar - ${third.name}`,
-        value: `> Patente: **${thirdPatent}**\n> Score: **${third.score}**\n> TWS: **${third.teamWorkScore}**\n> K/D: **${third.kills}/${third.deaths}**`,
+        value: `> Patente: **${thirdPatent}**\n> Score: **${third.score}**\n> Teamwork: **${third.teamWorkScore}**\n> K/D: **${third.kills}/${third.deaths}**`,
         inline: false,
       });
     }
@@ -99,7 +99,7 @@ export class TopPlayersPodium {
       const patent = await getPatent(player.score);
       embed.addFields({
         name: `${player.name}`,
-        value: `> Patente: **${patent}**\n> Score: **${player.score}**\n> TWS: **${player.teamWorkScore}**\n> K/D: **${player.kills}/${player.deaths}**`,
+        value: `> Patente: **${patent}**\n> Score: **${player.score}**\n> Teamwork: **${player.teamWorkScore}**\n> K/D: **${player.kills}/${player.deaths}**`,
         inline: false,
       });
     }

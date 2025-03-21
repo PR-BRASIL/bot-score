@@ -32,47 +32,50 @@ export class GetUserInformationCommand implements Command {
     userData: GetUserInformationOutput
   ) {
     const embed = new EmbedBuilder()
-      .setColor(0xffffff)
+      .setColor(0x1abc9c)
       .setAuthor({
-        name: "RB Status",
+        name: "📊 Status do Jogador",
         iconURL: interaction.guild.iconURL(),
       })
       .setThumbnail(interaction.guild.iconURL())
       .setTitle(
-        userData.name + " ・ " + `**${await getPatent(userData.score)}**`
+        `🎮 ${userData.name} ・ 🏅 **${await getPatent(userData.score)}**`
       )
       .setDescription(
-        `Aqui será listado algumas informações do jogador ${userData.name}\nOs pontos contabilizados são apenas de partidas no **Reality Brasil**!`
+        `📋 Informações detalhadas do jogador **${userData.name}**\n` +
+          `✨ Pontos contabilizados apenas de partidas no **Reality Brasil**`
       )
       .addFields(
         {
-          name: ":military_medal: Score",
-          value: `${userData.score}`,
+          name: "⭐ Pontuação Total",
+          value: `\`${userData.score.toLocaleString()}\``,
           inline: true,
         },
         {
-          name: ":military_helmet: TeamWorkScore",
-          value: `${userData.teamWorkScore}`,
+          name: "🤝 Trabalho em Equipe",
+          value: `\`${userData.teamWorkScore.toLocaleString()}\``,
           inline: true,
         },
         {
-          name: ":cocktail: Kills",
-          value: `${userData.kills}`,
+          name: "🔫 Eliminações",
+          value: `\`${userData.kills.toLocaleString()}\``,
           inline: true,
         },
         {
-          name: ":skull_crossbones: Deaths",
-          value: `${userData.deaths}`,
+          name: "💀 Mortes",
+          value: `\`${userData.deaths.toLocaleString()}\``,
           inline: true,
         },
         {
-          name: ":bar_chart: Rank",
-          value: `#${userData.rank}`,
+          name: "🏆 Posição no Ranking",
+          value: `#\`${userData.rank.toLocaleString()}\``,
           inline: true,
         }
       )
       .setFooter({
-        text: await new GetPatentProgress().get(userData.score),
+        text: `📊 Progresso: ${await new GetPatentProgress().get(
+          userData.score
+        )}`,
       });
 
     return embed;
