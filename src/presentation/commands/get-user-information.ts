@@ -20,11 +20,17 @@ export class GetUserInformationCommand implements Command {
     });
 
     if (!data) {
-      await interaction.reply("Usuário não encontrado!");
+      await interaction.reply({
+        content: "Usuário não encontrado!",
+        ephemeral: true,
+      });
       return;
     }
 
-    interaction.reply({ embeds: [await this.makeEmbed(interaction, data)] });
+    interaction.reply({
+      embeds: [await this.makeEmbed(interaction, data)],
+      ephemeral: true,
+    });
   }
 
   private async makeEmbed(
