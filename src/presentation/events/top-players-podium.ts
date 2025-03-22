@@ -60,7 +60,7 @@ export class TopPlayersPodium {
       const progress = await new GetPatentProgress().get(first.score);
       const patent = firstPatent.split(" <");
       embed.addFields({
-        name: `👑 1º Lugar - ${first.name}`,
+        name: `<a:first:1353055748262989867> 1º Lugar - ${first.name}`,
         value: `> \n> **<${patent[1] || ""} ${
           patent[0]
         }**\n> \n> ⭐ **Score:** ${first.score.toLocaleString(
@@ -69,7 +69,7 @@ export class TopPlayersPodium {
           "pt-BR"
         )}\n> 🎯 **K/D:** ${first.kills} / ${first.deaths} (${(
           first.kills / first.deaths
-        ).toFixed(2)})\n> ${progress}`,
+        ).toFixed(2)})\n> **${progress}**`,
         inline: false,
       });
     }
@@ -88,7 +88,7 @@ export class TopPlayersPodium {
           "pt-BR"
         )}\n> 🎯 **K/D:** ${second.kills} / ${second.deaths} (${(
           second.kills / second.deaths
-        ).toFixed(2)})\n> ${progress}`,
+        ).toFixed(2)})\n> **${progress}**`,
         inline: false,
       });
     }
@@ -107,7 +107,7 @@ export class TopPlayersPodium {
           "pt-BR"
         )}\n> 🎯 **K/D:** ${third.kills} / ${third.deaths} (${(
           third.kills / third.deaths
-        ).toFixed(2)})\n> ${progress}`,
+        ).toFixed(2)})\n> **${progress}**`,
         inline: false,
       });
     }
