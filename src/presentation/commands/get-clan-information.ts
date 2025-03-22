@@ -63,7 +63,7 @@ export class GetClanInformationCommand implements Command {
 
     if (!clan) {
       await interaction.editReply({
-        content: `Nenhum clã encontrado com "${clanNameParam}". Verifique se o nome está correto.`,
+        content: `Nenhum clã encontrado com "${clanNameParam}". Verifique se o nome está correto. Apenas listamos os melhores 25 clãs.`,
       });
       return;
     }
