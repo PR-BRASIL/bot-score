@@ -44,7 +44,8 @@ export class TopPlayersPodium {
       .setDescription(
         "Ranking dos melhores jogadores do Reality Brasil!\n" +
           "⚡ **DICA:** Jogue entre 7h e 14h para ganhar o **DOBRO** de pontuação!\n" +
-          "Utilize o comando `/stats` para ver as informações de um jogador específico."
+          "Utilize o comando `/stats` para ver as informações de um jogador específico.\n" +
+          "Utilize o comando `/clastats` para ver as informações de um clã específico."
       )
       .setThumbnail(channel.guild.iconURL() || null)
       .setTimestamp()

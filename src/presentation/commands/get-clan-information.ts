@@ -133,7 +133,6 @@ export class GetClanInformationCommand implements Command {
           `> 🎯 **K/D Total:** ${clan.totalKills.toLocaleString(
             "pt-BR"
           )} / ${clan.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})\n` +
-          `> 🕒 **Tempo Total Online:** ${totalTimeOnline}\n` +
           `> 🏆 **Posição no Ranking:** #${clanRank.toLocaleString("pt-BR")}`,
         inline: false,
       })
