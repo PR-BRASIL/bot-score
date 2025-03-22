@@ -81,9 +81,8 @@ export class GetUserInformationCommand implements Command {
         }
       );
 
-    // Adicionar tempo online se disponível
     if (userData.totalTime && userData.totalTime > 0) {
-      const timeOnline = calculateTotalOnlineTime(userData.totalTime);
+      const timeOnline = calculateTotalOnlineTime(userData.totalTime || 0);
       embed.addFields({
         name: "⏱️ Tempo Total Online",
         value: `\`${timeOnline}\``,
