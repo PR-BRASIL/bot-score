@@ -5,21 +5,111 @@
  * @param userName Nome do usuário
  * @returns Nome do clã ou null se não houver clã
  */
+const clanTagList: string[] = [
+  "SPTS",
+  "-COM",
+  "=SF",
+  "=SD",
+  "SUS",
+  "QRR",
+  "*V*",
+  "MC2",
+  "DARE",
+  "DATE",
+  "FEB",
+  "ADG",
+  "102",
+  "L|N",
+  "DOT",
+  "=IO",
+  "[FI",
+  "SSB",
+  "GTC",
+  "SOG",
+  "L|w",
+  "OP|",
+  "LDH",
+  "-LAM",
+  "ARA",
+  "FAL",
+  "SAE",
+  "SDC",
+  "KKCK",
+  "PTFS",
+  "YPF",
+  "FAA",
+  "F.E.R",
+  "TANGO",
+  "RIM:",
+  "vHc",
+  "ZVIR",
+  "TGS",
+  "MST",
+  "MTG",
+  "PIL",
+  "=WK",
+  "S.A.E",
+  "KRK",
+  "AFJ",
+  "BDF",
+  "VKS",
+  "PKP",
+  "FLAK",
+  "1SGT",
+  "BFE",
+  "PMC",
+  "GTE",
+  "BBP",
+  "[WD",
+  "VOID",
+  "IRF",
+  "IOS",
+  "BUS",
+  "=K",
+  "[HF",
+  "ROTAM",
+  "CDD",
+  "DFM",
+  "[KP",
+  "STI",
+  "LAFK",
+  "[DF",
+  "K-9",
+  "SAS",
+  "MDJ",
+  "MCMK",
+  "BTHP",
+  "BRM",
+  "55",
+];
+
 export function extractClanName(userName: string): string | null {
   if (!userName) return null;
 
-  const trimmedName = userName.trim();
+  const parts = userName.split(" ");
+  let tag = "";
+  if (parts.length == 2) tag = parts[0];
+  let name = parts[parts.length - 1];
+  const lowerTag = tag.toLowerCase();
+  const lowerName = name.toLowerCase();
 
-  if (trimmedName.startsWith(" ")) {
-    return null;
+  if (tag != "")
+    for (const clanTag of clanTagList) {
+      const lowerClanTag = clanTag.toLowerCase();
+      if (lowerTag.includes(lowerClanTag)) {
+        return clanTag;
+      }
+    }
+
+  for (const clanTag of clanTagList) {
+    const lowerClanTag = clanTag.toLowerCase();
+    if (lowerName.includes(lowerClanTag)) {
+      return clanTag;
+    }
   }
 
-  const spaceIndex = trimmedName.indexOf(" ");
-  if (spaceIndex > 0) {
-    return trimmedName.substring(0, spaceIndex);
-  }
-
-  return null;
+  if (tag == "") return null;
+  else return tag;
 }
 
 /**
