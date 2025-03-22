@@ -87,7 +87,7 @@ export class PatentsInfo {
       }
 
       embed.addFields({
-        name: `📈 Patentes ${type}`,
+        name: `\u200B`, // Caractere invisível
         value: `${patentsText}`,
         inline: false,
       });
