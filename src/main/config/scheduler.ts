@@ -10,7 +10,7 @@ export function scheduleTopPlayersPodium(client: Client): void {
   const podium = new TopPlayersPodium(getUserInformation);
 
   // every 10 minutes
-  cron.schedule("*/10 * * * * *", async () => {
+  cron.schedule("*/10 * * * *", async () => {
     console.log("Updating top players podium...");
     await podium.updatePodium(client);
   });
