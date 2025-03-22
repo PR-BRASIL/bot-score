@@ -97,7 +97,7 @@ export class PatentsInfo {
     embed.addFields({
       name: "🚀 Como subir de patente?",
       value:
-        "```diff\n+ Jogue no servidor Reality Brasil\n+ Cada kill, assistência e objetivo concluído aumenta seu score\n+ Acompanhe seu progresso com /score\n```",
+        "```diff\n+ Jogue no servidor Reality Brasil\n+ Cada kill, assistência e objetivo concluído aumenta seu score\n+ Acompanhe seu progresso com /stats\n```",
       inline: false,
     });
 
