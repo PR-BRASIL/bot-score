@@ -88,10 +88,11 @@ export class TopPlayersPodium {
       });
     }
 
-    for (const player of rest) {
+    for (const [index, player] of rest.entries()) {
+      const position = index + 4; // Começa do 4º lugar
       const patent = await getPatent(player.score);
       embed.addFields({
-        name: `${player.name} ・ **${patent}**`,
+        name: `${position}º Lugar - ${player.name} ・ **${patent}**`,
         value: `> ⭐ Score: **${player.score}**\n> 🤝 Teamwork: **${player.teamWorkScore}**\n> 🎯 K/D: **${player.kills}/${player.deaths}**`,
         inline: false,
       });
