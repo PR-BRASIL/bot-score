@@ -47,7 +47,7 @@ export class PatentsInfo {
       .setDescription(
         "```diff\n+ Conheça todas as patentes disponíveis no Reality Brasil!\n+ Continue jogando para subir no ranking e alcançar patentes mais altas.\n```"
       )
-      .setThumbnail("https://i.imgur.com/3ZQZQ9M.png")
+      .setThumbnail(channel.guild.iconURL() || null)
       .setTimestamp()
       .setImage(
         "https://media.discordapp.net/attachments/1162222580644708372/1274439425354371072/Capa_GitBook.png?ex=67df05b4&is=67ddb434&hm=e7f9eb86c1d74c0e1de0414f3dab11023f0820ea8431edfe0812e5afe80de930&=&format=webp&quality=lossless"
