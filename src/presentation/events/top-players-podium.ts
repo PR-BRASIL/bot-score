@@ -1,9 +1,4 @@
-import {
-  Client,
-  TextChannel,
-  EmbedBuilder,
-  RESTJSONErrorCodes,
-} from "discord.js";
+import { Client, TextChannel, EmbedBuilder } from "discord.js";
 import type { GetTopPlayers } from "../../domain/usecase/get-user-information";
 import { env } from "../../main/config/env";
 import { getPatent } from "../../utils/patents";
@@ -63,37 +58,74 @@ export class TopPlayersPodium {
     if (first) {
       const firstPatent = await getPatent(first.score);
       const progress = await new GetPatentProgress().get(first.score);
+      const patent = firstPatent.split(" <");
       embed.addFields({
-        name: `👑 1º Lugar - ${first.name} ・ **${firstPatent}**`,
-        value: `> ⭐ Score: **${first.score}**\n> 🤝 Teamwork: **${first.teamWorkScore}**\n> 🎯 K/D: **${first.kills}/${first.deaths}**\n> ${progress}`,
+        name: `👑 1º Lugar - ${first.name}`,
+        value: `> \n> **<${patent[1] || ""} ${
+          patent[0]
+        }**\n> \n> ⭐ **Score:** ${first.score.toLocaleString(
+          "pt-BR"
+        )}\n> 🤝 **Teamwork:** ${first.teamWorkScore.toLocaleString(
+          "pt-BR"
+        )}\n> 🎯 **K/D:** ${first.kills} / ${first.deaths} (${(
+          first.kills / first.deaths
+        ).toFixed(2)})\n> ${progress}`,
         inline: false,
       });
     }
 
     if (second) {
       const secondPatent = await getPatent(second.score);
+      const patent = secondPatent.split(" <");
+      const progress = await new GetPatentProgress().get(second.score);
       embed.addFields({
-        name: `🥈 2º Lugar - ${second.name} ・ **${secondPatent}**`,
-        value: `> ⭐ Score: **${second.score}**\n> 🤝 Teamwork: **${second.teamWorkScore}**\n> 🎯 K/D: **${second.kills}/${second.deaths}**`,
+        name: `🥈 2º Lugar - ${second.name}`,
+        value: `> \n> **<${patent[1] || ""} ${
+          patent[0]
+        }**\n> \n> ⭐ **Score:** ${second.score.toLocaleString(
+          "pt-BR"
+        )}\n> 🤝 **Teamwork:** ${second.teamWorkScore.toLocaleString(
+          "pt-BR"
+        )}\n> 🎯 **K/D:** ${second.kills} / ${second.deaths} (${(
+          second.kills / second.deaths
+        ).toFixed(2)})\n> ${progress}`,
         inline: false,
       });
     }
 
     if (third) {
       const thirdPatent = await getPatent(third.score);
+      const patent = thirdPatent.split(" <");
+      const progress = await new GetPatentProgress().get(third.score);
       embed.addFields({
-        name: `🥉 3º Lugar - ${third.name} ・ **${thirdPatent}**`,
-        value: `> ⭐ Score: **${third.score}**\n> 🤝 Teamwork: **${third.teamWorkScore}**\n> 🎯 K/D: **${third.kills}/${third.deaths}**`,
+        name: `🥉 3º Lugar - ${third.name}`,
+        value: `> \n> **<${patent[1] || ""} ${
+          patent[0]
+        }**\n> \n> ⭐ **Score:** ${third.score.toLocaleString(
+          "pt-BR"
+        )}\n> 🤝 **Teamwork:** ${third.teamWorkScore.toLocaleString(
+          "pt-BR"
+        )}\n> 🎯 **K/D:** ${third.kills} / ${third.deaths} (${(
+          third.kills / third.deaths
+        ).toFixed(2)})\n> ${progress}`,
         inline: false,
       });
     }
 
     for (const [index, player] of rest.entries()) {
       const position = index + 4; // Começa do 4º lugar
-      const patent = await getPatent(player.score);
+      const patent = (await getPatent(player.score)).split(" <");
       embed.addFields({
-        name: `${position}º Lugar - ${player.name} ・ **${patent}**`,
-        value: `> ⭐ Score: **${player.score}**\n> 🤝 Teamwork: **${player.teamWorkScore}**\n> 🎯 K/D: **${player.kills}/${player.deaths}**`,
+        name: `${position}º Lugar - ${player.name}`,
+        value: `> \n> **<${patent[1]} ${
+          patent[0]
+        }**\n> \n> ⭐ **Score:** ${player.score.toLocaleString(
+          "pt-BR"
+        )}\n> 🤝 **Teamwork:** ${player.teamWorkScore.toLocaleString(
+          "pt-BR"
+        )}\n> 🎯 **K/D:** ${player.kills} / ${player.deaths} (${(
+          player.kills / player.deaths
+        ).toFixed(2)})`,
         inline: false,
       });
     }

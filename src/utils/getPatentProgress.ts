@@ -12,7 +12,7 @@ export class GetPatentProgress {
 
     const REPEAT = 20;
     if (!patentWithSort[patentIndex - 1])
-      return "[" + "▋".repeat(REPEAT) + "] (Max Level)";
+      return "[" + "▰".repeat(REPEAT) + "] (Max Level)";
 
     const nextScore = !patentWithSort
       ? patents[patents.length - 1].score
@@ -47,9 +47,9 @@ export class GetPatentProgress {
     let progressBar = "Next level: [";
     for (let i = 0; i < barSize; i++) {
       if (i < filledCharacters) {
-        progressBar += "▋";
+        progressBar += "▰";
       } else {
-        progressBar += "░";
+        progressBar += "▱";
       }
     }
     progressBar += `] (${currentValue}/${desiredValue})`;

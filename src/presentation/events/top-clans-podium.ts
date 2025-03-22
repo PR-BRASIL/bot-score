@@ -54,33 +54,82 @@ export class TopClansPodium {
     const [first, second, third, ...rest] = topClans;
 
     if (first) {
+      const kdRatio =
+        first.totalDeaths > 0
+          ? (first.totalKills / first.totalDeaths).toFixed(2)
+          : first.totalKills.toFixed(2);
       embed.addFields({
         name: `👑 1º Lugar - ${first.name}`,
-        value: `> 👥 Membros: **${first.memberCount}**\n> ⭐ Score Total: **${first.totalScore}**\n> 🤝 Teamwork Total: **${first.totalTeamWorkScore}**\n> 🎯 K/D Total: **${first.totalKills}/${first.totalDeaths}**`,
+        value: `> \n> 📊 **Estatísticas do Clã**\n> \n> 👥 **Membros:** ${first.memberCount.toLocaleString(
+          "pt-BR"
+        )}\n> ⭐ **Score Total:** ${first.totalScore.toLocaleString(
+          "pt-BR"
+        )}\n> 🤝 **Teamwork Total:** ${first.totalTeamWorkScore.toLocaleString(
+          "pt-BR"
+        )}\n> 🎯 **K/D Total:** ${first.totalKills.toLocaleString(
+          "pt-BR"
+        )} / ${first.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})`,
         inline: false,
       });
     }
 
     if (second) {
+      const kdRatio =
+        second.totalDeaths > 0
+          ? (second.totalKills / second.totalDeaths).toFixed(2)
+          : second.totalKills.toFixed(2);
       embed.addFields({
         name: `🥈 2º Lugar - ${second.name}`,
-        value: `> 👥 Membros: **${second.memberCount}**\n> ⭐ Score Total: **${second.totalScore}**\n> 🤝 Teamwork Total: **${second.totalTeamWorkScore}**\n> 🎯 K/D Total: **${second.totalKills}/${second.totalDeaths}**`,
+        value: `> \n> 📊 **Estatísticas do Clã**\n> \n> 👥 **Membros:** ${second.memberCount.toLocaleString(
+          "pt-BR"
+        )}\n> ⭐ **Score Total:** ${second.totalScore.toLocaleString(
+          "pt-BR"
+        )}\n> 🤝 **Teamwork Total:** ${second.totalTeamWorkScore.toLocaleString(
+          "pt-BR"
+        )}\n> 🎯 **K/D Total:** ${second.totalKills.toLocaleString(
+          "pt-BR"
+        )} / ${second.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})`,
         inline: false,
       });
     }
 
     if (third) {
+      const kdRatio =
+        third.totalDeaths > 0
+          ? (third.totalKills / third.totalDeaths).toFixed(2)
+          : third.totalKills.toFixed(2);
       embed.addFields({
         name: `🥉 3º Lugar - ${third.name}`,
-        value: `> 👥 Membros: **${third.memberCount}**\n> ⭐ Score Total: **${third.totalScore}**\n> 🤝 Teamwork Total: **${third.totalTeamWorkScore}**\n> 🎯 K/D Total: **${third.totalKills}/${third.totalDeaths}**`,
+        value: `> \n> 📊 **Estatísticas do Clã**\n> \n> 👥 **Membros:** ${third.memberCount.toLocaleString(
+          "pt-BR"
+        )}\n> ⭐ **Score Total:** ${third.totalScore.toLocaleString(
+          "pt-BR"
+        )}\n> 🤝 **Teamwork Total:** ${third.totalTeamWorkScore.toLocaleString(
+          "pt-BR"
+        )}\n> 🎯 **K/D Total:** ${third.totalKills.toLocaleString(
+          "pt-BR"
+        )} / ${third.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})`,
         inline: false,
       });
     }
 
-    for (const clan of rest) {
+    for (const [index, clan] of rest.entries()) {
+      const position = index + 4; // Começa do 4º lugar
+      const kdRatio =
+        clan.totalDeaths > 0
+          ? (clan.totalKills / clan.totalDeaths).toFixed(2)
+          : clan.totalKills.toFixed(2);
       embed.addFields({
-        name: `${clan.name}`,
-        value: `> 👥 Membros: **${clan.memberCount}**\n> ⭐ Score Total: **${clan.totalScore}**\n> 🤝 Teamwork Total: **${clan.totalTeamWorkScore}**\n> 🎯 K/D Total: **${clan.totalKills}/${clan.totalDeaths}**`,
+        name: `${position}º Lugar - ${clan.name}`,
+        value: `> \n> 📊 **Estatísticas do Clã**\n> \n> 👥 **Membros:** ${clan.memberCount.toLocaleString(
+          "pt-BR"
+        )}\n> ⭐ **Score Total:** ${clan.totalScore.toLocaleString(
+          "pt-BR"
+        )}\n> 🤝 **Teamwork Total:** ${clan.totalTeamWorkScore.toLocaleString(
+          "pt-BR"
+        )}\n> 🎯 **K/D Total:** ${clan.totalKills.toLocaleString(
+          "pt-BR"
+        )} / ${clan.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})`,
         inline: false,
       });
     }
