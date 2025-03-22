@@ -81,13 +81,6 @@ export class GetUserInformationCommand implements Command {
         }
       );
 
-    const timeOnline = calculateTotalOnlineTime(userData.totalTime || 0);
-    embed.addFields({
-      name: "⏱️ Tempo Total Online",
-      value: `\`${timeOnline}\``,
-      inline: false,
-    });
-
     embed.setFooter({
       text: `📊 Progresso: ${await new GetPatentProgress().get(
         userData.score
