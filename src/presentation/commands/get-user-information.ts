@@ -60,7 +60,7 @@ export class GetUserInformationCommand implements Command {
       )
       .addFields({
         name: "📊 Patente Atual",
-        value: `> \n> **<${patent[1] || ""} ${patent[0]}**\n> `,
+        value: `> \n> **<${patent[1] || ""} ${patent[0]}**\n> ㅤ`,
         inline: false,
       })
       .addFields({

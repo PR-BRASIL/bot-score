@@ -60,7 +60,7 @@ export class TopClansPodium {
           : first.totalKills.toFixed(2);
       embed.addFields({
         name: `👑 1º Lugar - ${first.name}`,
-        value: `> \n> 📊 **Estatísticas do Clã**\n> \n> 👥 **Membros:** ${first.memberCount.toLocaleString(
+        value: `> 👥 **Membros:** ${first.memberCount.toLocaleString(
           "pt-BR"
         )}\n> ⭐ **Score Total:** ${first.totalScore.toLocaleString(
           "pt-BR"
@@ -80,7 +80,7 @@ export class TopClansPodium {
           : second.totalKills.toFixed(2);
       embed.addFields({
         name: `🥈 2º Lugar - ${second.name}`,
-        value: `> \n> 📊 **Estatísticas do Clã**\n> \n> 👥 **Membros:** ${second.memberCount.toLocaleString(
+        value: `> 👥 **Membros:** ${second.memberCount.toLocaleString(
           "pt-BR"
         )}\n> ⭐ **Score Total:** ${second.totalScore.toLocaleString(
           "pt-BR"
@@ -100,7 +100,7 @@ export class TopClansPodium {
           : third.totalKills.toFixed(2);
       embed.addFields({
         name: `🥉 3º Lugar - ${third.name}`,
-        value: `> \n> 📊 **Estatísticas do Clã**\n> \n> 👥 **Membros:** ${third.memberCount.toLocaleString(
+        value: `> 👥 **Membros:** ${third.memberCount.toLocaleString(
           "pt-BR"
         )}\n> ⭐ **Score Total:** ${third.totalScore.toLocaleString(
           "pt-BR"
@@ -121,7 +121,7 @@ export class TopClansPodium {
           : clan.totalKills.toFixed(2);
       embed.addFields({
         name: `${position}º Lugar - ${clan.name}`,
-        value: `> \n> 📊 **Estatísticas do Clã**\n> \n> 👥 **Membros:** ${clan.memberCount.toLocaleString(
+        value: `> 👥 **Membros:** ${clan.memberCount.toLocaleString(
           "pt-BR"
         )}\n> ⭐ **Score Total:** ${clan.totalScore.toLocaleString(
           "pt-BR"
