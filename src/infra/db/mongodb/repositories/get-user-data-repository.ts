@@ -20,7 +20,7 @@ export class MongoSaveUserDataRepository
     const regex = new RegExp(data.nameOrHash, "i");
     const users = await this.collection
       .find<User>({
-        name: regex,
+        $or: [{ name: regex }, { hash: regex }],
       })
       .toArray();
 
