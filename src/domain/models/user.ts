@@ -7,4 +7,5 @@ export interface User {
   kills: number;
   deaths: number;
   score: number;
+  totalTime: number;
 }

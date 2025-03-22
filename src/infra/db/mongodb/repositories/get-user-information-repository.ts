@@ -52,6 +52,10 @@ export class MongoGetUserInformationRepository
       );
       const totalKills = members.reduce((sum, user) => sum + user.kills, 0);
       const totalDeaths = members.reduce((sum, user) => sum + user.deaths, 0);
+      const totalTimeOnline = members.reduce(
+        (sum, user) => sum + (user.totalTime || 0),
+        0
+      );
 
       clans.push({
         name: clanName,
@@ -60,6 +64,7 @@ export class MongoGetUserInformationRepository
         totalTeamWorkScore,
         totalKills,
         totalDeaths,
+        totalTimeOnline,
         members,
       });
     }

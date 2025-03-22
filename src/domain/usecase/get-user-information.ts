@@ -11,6 +11,7 @@ export interface GetUserInformationOutput {
   deaths: number;
   score: number;
   rank: number;
+  totalTime?: number;
 }
 
 export interface GetUserInformation {
@@ -28,6 +29,7 @@ export interface Clan {
   totalTeamWorkScore: number;
   totalKills: number;
   totalDeaths: number;
+  totalTimeOnline: number;
   members: User[];
 }
 

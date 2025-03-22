@@ -8,6 +8,7 @@ import type { GetTopPlayers } from "../../domain/usecase/get-user-information";
 import { env } from "../../main/config/env";
 import { getPatent } from "../../utils/patents";
 import { GetPatentProgress } from "../../utils/getPatentProgress";
+import { calculateTotalOnlineTime } from "../../utils/calculate-time-util";
 
 export class TopPlayersPodium {
   private readonly getTopPlayers: GetTopPlayers;
@@ -47,7 +48,9 @@ export class TopPlayersPodium {
       })
       .setTitle("🏆 Top 6 Melhores Jogadores")
       .setDescription(
-        "Ranking dos melhores jogadores do Reality Brasil!\nUtilize o comando `/stats` para ver as informações de um jogador específico."
+        "Ranking dos melhores jogadores do Reality Brasil!\n" +
+          "⚡ **DICA:** Jogue entre 7h e 14h para ganhar o **DOBRO** de pontuação!\n" +
+          "Utilize o comando `/stats` para ver as informações de um jogador específico."
       )
       .setThumbnail(channel.guild.iconURL() || null)
       .setTimestamp()
@@ -61,36 +64,40 @@ export class TopPlayersPodium {
     if (first) {
       const firstPatent = await getPatent(first.score);
       const progress = await new GetPatentProgress().get(first.score);
+      const timeOnline = calculateTotalOnlineTime(first.totalTime || 0);
       embed.addFields({
         name: `👑 1º Lugar - ${first.name} ・ **${firstPatent}**`,
-        value: `> Score: **${first.score}**\n> Teamwork: **${first.teamWorkScore}**\n> K/D: **${first.kills}/${first.deaths}**\n> ${progress}`,
+        value: `> Score: **${first.score}**\n> Teamwork: **${first.teamWorkScore}**\n> K/D: **${first.kills}/${first.deaths}**\n> ⏱️ Tempo Online: **${timeOnline}**\n> ${progress}`,
         inline: false,
       });
     }
 
     if (second) {
       const secondPatent = await getPatent(second.score);
+      const timeOnline = calculateTotalOnlineTime(second.totalTime || 0);
       embed.addFields({
         name: `🥈 2º Lugar - ${second.name} ・ **${secondPatent}**`,
-        value: `> Score: **${second.score}**\n> Teamwork: **${second.teamWorkScore}**\n> K/D: **${second.kills}/${second.deaths}**`,
+        value: `> Score: **${second.score}**\n> Teamwork: **${second.teamWorkScore}**\n> K/D: **${second.kills}/${second.deaths}**\n> ⏱️ Tempo Online: **${timeOnline}**`,
         inline: false,
       });
     }
 
     if (third) {
       const thirdPatent = await getPatent(third.score);
+      const timeOnline = calculateTotalOnlineTime(third.totalTime || 0);
       embed.addFields({
         name: `🥉 3º Lugar - ${third.name} ・ **${thirdPatent}**`,
-        value: `> Score: **${third.score}**\n> Teamwork: **${third.teamWorkScore}**\n> K/D: **${third.kills}/${third.deaths}**`,
+        value: `> Score: **${third.score}**\n> Teamwork: **${third.teamWorkScore}**\n> K/D: **${third.kills}/${third.deaths}**\n> ⏱️ Tempo Online: **${timeOnline}**`,
         inline: false,
       });
     }
 
     for (const player of rest) {
       const patent = await getPatent(player.score);
+      const timeOnline = calculateTotalOnlineTime(player.totalTime || 0);
       embed.addFields({
         name: `${player.name} ・ **${patent}**`,
-        value: `> Score: **${player.score}**\n> Teamwork: **${player.teamWorkScore}**\n> K/D: **${player.kills}/${player.deaths}**`,
+        value: `> Score: **${player.score}**\n> Teamwork: **${player.teamWorkScore}**\n> K/D: **${player.kills}/${player.deaths}**\n> ⏱️ Tempo Online: **${timeOnline}**`,
         inline: false,
       });
     }

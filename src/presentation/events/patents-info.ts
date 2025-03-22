@@ -97,7 +97,15 @@ export class PatentsInfo {
     embed.addFields({
       name: "🚀 Como subir de patente?",
       value:
-        "```diff\n+ Jogue no servidor Reality Brasil\n+ Cada kill, assistência e objetivo concluído aumenta seu score\n+ Acompanhe seu progresso com /stats\n```",
+        "```diff\n+ Jogue no servidor Reality Brasil\n+ Cada kill, assistência e objetivo concluído aumenta seu score\n+ Jogue entre 7h e 14h para ganhar DOBRO de pontuação!\n+ Acompanhe seu progresso com /stats\n```",
+      inline: false,
+    });
+
+    // Adicionar campo especial com informação sobre bônus
+    embed.addFields({
+      name: "⚡ Horário de Bônus de Score (SEED)",
+      value:
+        "🕖 **Ganhe o DOBRO de pontuação jogando entre 7h e 14h!** 🕑\nAproveite este horário especial para subir nas patentes mais rapidamente!",
       inline: false,
     });
 

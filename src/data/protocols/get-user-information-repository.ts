@@ -9,6 +9,7 @@ export interface GetUserInformationRepositoryOutput {
   deaths: number;
   score: number;
   rank: number;
+  totalTime?: number;
 }
 
 export interface GetUserInformationRepository {

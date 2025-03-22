@@ -1,6 +1,7 @@
 import { Client, TextChannel, EmbedBuilder } from "discord.js";
 import type { GetTopClans } from "../../domain/usecase/get-user-information";
 import { env } from "../../main/config/env";
+import { calculateTotalOnlineTime } from "../../utils/calculate-time-util";
 
 export class TopClansPodium {
   private readonly getTopClans: GetTopClans;
@@ -40,7 +41,9 @@ export class TopClansPodium {
       })
       .setTitle("🏆 Top 6 Melhores Clãs")
       .setDescription(
-        "Ranking dos melhores clãs do Reality Brasil!\nUtilize o comando `/stats` para ver as informações de um jogador específico."
+        "Ranking dos melhores clãs do Reality Brasil!\n" +
+          "⚡ **DICA PARA CLÃS:** Incentive seus membros a jogar entre 7h e 14h para ganhar o **DOBRO** de pontuação!\n" +
+          "Utilize o comando `/stats` para ver as informações de um jogador específico."
       )
       .setThumbnail(channel.guild.iconURL() || null)
       .setTimestamp()
@@ -52,33 +55,37 @@ export class TopClansPodium {
     const [first, second, third, ...rest] = topClans;
 
     if (first) {
+      const timeOnline = calculateTotalOnlineTime(first.totalTimeOnline);
       embed.addFields({
         name: `👑 1º Lugar - ${first.name}`,
-        value: `> Membros: **${first.memberCount}**\n> Score Total: **${first.totalScore}**\n> Teamwork Total: **${first.totalTeamWorkScore}**\n> K/D Total: **${first.totalKills}/${first.totalDeaths}**`,
+        value: `> Membros: **${first.memberCount}**\n> Score Total: **${first.totalScore}**\n> Teamwork Total: **${first.totalTeamWorkScore}**\n> K/D Total: **${first.totalKills}/${first.totalDeaths}**\n> ⏱️ Tempo Online Total: **${timeOnline}**`,
         inline: false,
       });
     }
 
     if (second) {
+      const timeOnline = calculateTotalOnlineTime(second.totalTimeOnline);
       embed.addFields({
         name: `🥈 2º Lugar - ${second.name}`,
-        value: `> Membros: **${second.memberCount}**\n> Score Total: **${second.totalScore}**\n> Teamwork Total: **${second.totalTeamWorkScore}**\n> K/D Total: **${second.totalKills}/${second.totalDeaths}**`,
+        value: `> Membros: **${second.memberCount}**\n> Score Total: **${second.totalScore}**\n> Teamwork Total: **${second.totalTeamWorkScore}**\n> K/D Total: **${second.totalKills}/${second.totalDeaths}**\n> ⏱️ Tempo Online Total: **${timeOnline}**`,
         inline: false,
       });
     }
 
     if (third) {
+      const timeOnline = calculateTotalOnlineTime(third.totalTimeOnline);
       embed.addFields({
         name: `🥉 3º Lugar - ${third.name}`,
-        value: `> Membros: **${third.memberCount}**\n> Score Total: **${third.totalScore}**\n> Teamwork Total: **${third.totalTeamWorkScore}**\n> K/D Total: **${third.totalKills}/${third.totalDeaths}**`,
+        value: `> Membros: **${third.memberCount}**\n> Score Total: **${third.totalScore}**\n> Teamwork Total: **${third.totalTeamWorkScore}**\n> K/D Total: **${third.totalKills}/${third.totalDeaths}**\n> ⏱️ Tempo Online Total: **${timeOnline}**`,
         inline: false,
       });
     }
 
     for (const clan of rest) {
+      const timeOnline = calculateTotalOnlineTime(clan.totalTimeOnline);
       embed.addFields({
         name: `${clan.name}`,
-        value: `> Membros: **${clan.memberCount}**\n> Score Total: **${clan.totalScore}**\n> Teamwork Total: **${clan.totalTeamWorkScore}**\n> K/D Total: **${clan.totalKills}/${clan.totalDeaths}**`,
+        value: `> Membros: **${clan.memberCount}**\n> Score Total: **${clan.totalScore}**\n> Teamwork Total: **${clan.totalTeamWorkScore}**\n> K/D Total: **${clan.totalKills}/${clan.totalDeaths}**\n> ⏱️ Tempo Online Total: **${timeOnline}**`,
         inline: false,
       });
     }

@@ -6,6 +6,7 @@ import type {
 } from "../../domain/usecase/get-user-information";
 import { getPatent } from "../../utils/patents";
 import { GetPatentProgress } from "../../utils/getPatentProgress";
+import { calculateTotalOnlineTime } from "../../utils/calculate-time-util";
 
 export class GetUserInformationCommand implements Command {
   public constructor(
@@ -49,7 +50,8 @@ export class GetUserInformationCommand implements Command {
       )
       .setDescription(
         `📋 Informações detalhadas do jogador **${userData.name}**\n` +
-          `✨ Pontos contabilizados apenas de partidas no **Reality Brasil**`
+          `✨ Pontos contabilizados apenas de partidas no **Reality Brasil**\n` +
+          `⚡ **DICA:** Jogue entre 7h e 14h para ganhar o **DOBRO** de pontuação!`
       )
       .addFields(
         {
@@ -77,12 +79,23 @@ export class GetUserInformationCommand implements Command {
           value: `#\`${userData.rank.toLocaleString()}\``,
           inline: false,
         }
-      )
-      .setFooter({
-        text: `📊 Progresso: ${await new GetPatentProgress().get(
-          userData.score
-        )}`,
+      );
+
+    // Adicionar tempo online se disponível
+    if (userData.totalTime && userData.totalTime > 0) {
+      const timeOnline = calculateTotalOnlineTime(userData.totalTime);
+      embed.addFields({
+        name: "⏱️ Tempo Total Online",
+        value: `\`${timeOnline}\``,
+        inline: false,
       });
+    }
+
+    embed.setFooter({
+      text: `📊 Progresso: ${await new GetPatentProgress().get(
+        userData.score
+      )}`,
+    });
 
     return embed;
   }
