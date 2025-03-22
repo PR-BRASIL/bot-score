@@ -65,7 +65,7 @@ export class GetUserInformationCommand implements Command {
           inline: false,
         },
         {
-          name: "🔫 Eliminações",
+          name: "🎯 Eliminações",
           value: `\`${userData.kills.toLocaleString()}\``,
           inline: false,
         },
@@ -81,14 +81,12 @@ export class GetUserInformationCommand implements Command {
         }
       );
 
-    if (userData.totalTime && userData.totalTime > 0) {
-      const timeOnline = calculateTotalOnlineTime(userData.totalTime || 0);
-      embed.addFields({
-        name: "⏱️ Tempo Total Online",
-        value: `\`${timeOnline}\``,
-        inline: false,
-      });
-    }
+    const timeOnline = calculateTotalOnlineTime(userData.totalTime || 0);
+    embed.addFields({
+      name: "⏱️ Tempo Total Online",
+      value: `\`${timeOnline}\``,
+      inline: false,
+    });
 
     embed.setFooter({
       text: `📊 Progresso: ${await new GetPatentProgress().get(

@@ -58,7 +58,7 @@ export class TopClansPodium {
       const timeOnline = calculateTotalOnlineTime(first.totalTimeOnline || 0);
       embed.addFields({
         name: `👑 1º Lugar - ${first.name}`,
-        value: `> Membros: **${first.memberCount}**\n> Score Total: **${first.totalScore}**\n> Teamwork Total: **${first.totalTeamWorkScore}**\n> K/D Total: **${first.totalKills}/${first.totalDeaths}**\n> ⏱️ Tempo Online Total: **${timeOnline}**`,
+        value: `> 👥 Membros: **${first.memberCount}**\n> ⭐ Score Total: **${first.totalScore}**\n> 🤝 Teamwork Total: **${first.totalTeamWorkScore}**\n> 🎯 K/D Total: **${first.totalKills}/${first.totalDeaths}**\n> ⏱️ Tempo Online Total: **${timeOnline}**`,
         inline: false,
       });
     }
@@ -67,7 +67,7 @@ export class TopClansPodium {
       const timeOnline = calculateTotalOnlineTime(second.totalTimeOnline || 0);
       embed.addFields({
         name: `🥈 2º Lugar - ${second.name}`,
-        value: `> Membros: **${second.memberCount}**\n> Score Total: **${second.totalScore}**\n> Teamwork Total: **${second.totalTeamWorkScore}**\n> K/D Total: **${second.totalKills}/${second.totalDeaths}**\n> ⏱️ Tempo Online Total: **${timeOnline}**`,
+        value: `> 👥 Membros: **${second.memberCount}**\n> ⭐ Score Total: **${second.totalScore}**\n> 🤝 Teamwork Total: **${second.totalTeamWorkScore}**\n> 🎯 K/D Total: **${second.totalKills}/${second.totalDeaths}**\n> ⏱️ Tempo Online Total: **${timeOnline}**`,
         inline: false,
       });
     }
@@ -76,7 +76,7 @@ export class TopClansPodium {
       const timeOnline = calculateTotalOnlineTime(third.totalTimeOnline || 0);
       embed.addFields({
         name: `🥉 3º Lugar - ${third.name}`,
-        value: `> Membros: **${third.memberCount}**\n> Score Total: **${third.totalScore}**\n> Teamwork Total: **${third.totalTeamWorkScore}**\n> K/D Total: **${third.totalKills}/${third.totalDeaths}**\n> ⏱️ Tempo Online Total: **${timeOnline}**`,
+        value: `> 👥 Membros: **${third.memberCount}**\n> ⭐ Score Total: **${third.totalScore}**\n> 🤝 Teamwork Total: **${third.totalTeamWorkScore}**\n> 🎯 K/D Total: **${third.totalKills}/${third.totalDeaths}**\n> ⏱️ Tempo Online Total: **${timeOnline}**`,
         inline: false,
       });
     }
@@ -85,7 +85,7 @@ export class TopClansPodium {
       const timeOnline = calculateTotalOnlineTime(clan.totalTimeOnline || 0);
       embed.addFields({
         name: `${clan.name}`,
-        value: `> Membros: **${clan.memberCount}**\n> Score Total: **${clan.totalScore}**\n> Teamwork Total: **${clan.totalTeamWorkScore}**\n> K/D Total: **${clan.totalKills}/${clan.totalDeaths}**\n> ⏱️ Tempo Online Total: **${timeOnline}**`,
+        value: `> 👥 Membros: **${clan.memberCount}**\n> ⭐ Score Total: **${clan.totalScore}**\n> 🤝 Teamwork Total: **${clan.totalTeamWorkScore}**\n> 🎯 K/D Total: **${clan.totalKills}/${clan.totalDeaths}**\n> ⏱️ Tempo Online Total: **${timeOnline}**`,
         inline: false,
       });
     }

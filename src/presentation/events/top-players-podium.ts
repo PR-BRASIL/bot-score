@@ -67,7 +67,7 @@ export class TopPlayersPodium {
       const timeOnline = calculateTotalOnlineTime(first.totalTime || 0);
       embed.addFields({
         name: `👑 1º Lugar - ${first.name} ・ **${firstPatent}**`,
-        value: `> Score: **${first.score}**\n> Teamwork: **${first.teamWorkScore}**\n> K/D: **${first.kills}/${first.deaths}**\n> ⏱️ Tempo Online: **${timeOnline}**\n> ${progress}`,
+        value: `> ⭐ Score: **${first.score}**\n> 🤝 Teamwork: **${first.teamWorkScore}**\n> 🎯 K/D: **${first.kills}/${first.deaths}**\n> ⏱️ Tempo Online: **${timeOnline}**\n> ${progress}`,
         inline: false,
       });
     }
@@ -77,7 +77,7 @@ export class TopPlayersPodium {
       const timeOnline = calculateTotalOnlineTime(second.totalTime || 0);
       embed.addFields({
         name: `🥈 2º Lugar - ${second.name} ・ **${secondPatent}**`,
-        value: `> Score: **${second.score}**\n> Teamwork: **${second.teamWorkScore}**\n> K/D: **${second.kills}/${second.deaths}**\n> ⏱️ Tempo Online: **${timeOnline}**`,
+        value: `> ⭐ Score: **${second.score}**\n> 🤝 Teamwork: **${second.teamWorkScore}**\n> 🎯 K/D: **${second.kills}/${second.deaths}**\n> ⏱️ Tempo Online: **${timeOnline}**`,
         inline: false,
       });
     }
@@ -87,7 +87,7 @@ export class TopPlayersPodium {
       const timeOnline = calculateTotalOnlineTime(third.totalTime || 0);
       embed.addFields({
         name: `🥉 3º Lugar - ${third.name} ・ **${thirdPatent}**`,
-        value: `> Score: **${third.score}**\n> Teamwork: **${third.teamWorkScore}**\n> K/D: **${third.kills}/${third.deaths}**\n> ⏱️ Tempo Online: **${timeOnline}**`,
+        value: `> ⭐ Score: **${third.score}**\n> 🤝 Teamwork: **${third.teamWorkScore}**\n> 🎯 K/D: **${third.kills}/${third.deaths}**\n> ⏱️ Tempo Online: **${timeOnline}**`,
         inline: false,
       });
     }
@@ -97,7 +97,7 @@ export class TopPlayersPodium {
       const timeOnline = calculateTotalOnlineTime(player.totalTime || 0);
       embed.addFields({
         name: `${player.name} ・ **${patent}**`,
-        value: `> Score: **${player.score}**\n> Teamwork: **${player.teamWorkScore}**\n> K/D: **${player.kills}/${player.deaths}**\n> ⏱️ Tempo Online: **${timeOnline}**`,
+        value: `> ⭐ Score: **${player.score}**\n> 🤝 Teamwork: **${player.teamWorkScore}**\n> 🎯 K/D: **${player.kills}/${player.deaths}**\n> ⏱️ Tempo Online: **${timeOnline}**`,
         inline: false,
       });
     }
