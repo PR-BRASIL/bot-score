@@ -10,6 +10,7 @@ export interface GetUserInformationRepositoryOutput {
   score: number;
   rank: number;
   totalTime?: number;
+  rounds: number;
 }
 
 export interface GetUserInformationRepository {

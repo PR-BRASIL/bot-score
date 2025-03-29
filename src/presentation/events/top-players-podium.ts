@@ -66,7 +66,9 @@ export class TopPlayersPodium {
           patent[0]
         }**\n> \n> ⭐ **Score:** ${first.score.toLocaleString(
           "pt-BR"
-        )}\n> 🤝 **Teamwork:** ${first.teamWorkScore.toLocaleString(
+        )}\n> 🎮 **Partidas:** ${
+          first.rounds || 0
+        }\n> 🤝 **Teamwork:** ${first.teamWorkScore.toLocaleString(
           "pt-BR"
         )}\n> 🎯 **K/D:** ${first.kills} / ${first.deaths} (${(
           first.kills / first.deaths
@@ -85,7 +87,9 @@ export class TopPlayersPodium {
           patent[0]
         }**\n> \n> ⭐ **Score:** ${second.score.toLocaleString(
           "pt-BR"
-        )}\n> 🤝 **Teamwork:** ${second.teamWorkScore.toLocaleString(
+        )}\n> 🎮 **Partidas:** ${
+          second.rounds || 0
+        }\n> 🤝 **Teamwork:** ${second.teamWorkScore.toLocaleString(
           "pt-BR"
         )}\n> 🎯 **K/D:** ${second.kills} / ${second.deaths} (${(
           second.kills / second.deaths
@@ -104,7 +108,9 @@ export class TopPlayersPodium {
           patent[0]
         }**\n> \n> ⭐ **Score:** ${third.score.toLocaleString(
           "pt-BR"
-        )}\n> 🤝 **Teamwork:** ${third.teamWorkScore.toLocaleString(
+        )}\n> 🎮 **Partidas:** ${
+          third.rounds || 0
+        }\n> 🤝 **Teamwork:** ${third.teamWorkScore.toLocaleString(
           "pt-BR"
         )}\n> 🎯 **K/D:** ${third.kills} / ${third.deaths} (${(
           third.kills / third.deaths
@@ -122,7 +128,9 @@ export class TopPlayersPodium {
           patent[0]
         }**\n> \n> ⭐ **Score:** ${player.score.toLocaleString(
           "pt-BR"
-        )}\n> 🤝 **Teamwork:** ${player.teamWorkScore.toLocaleString(
+        )}\n> 🎮 **Partidas:** ${
+          player.rounds || 0
+        }\n> 🤝 **Teamwork:** ${player.teamWorkScore.toLocaleString(
           "pt-BR"
         )}\n> 🎯 **K/D:** ${player.kills} / ${player.deaths} (${(
           player.kills / player.deaths

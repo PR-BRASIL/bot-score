@@ -68,6 +68,9 @@ export class GetUserInformationCommand implements Command {
         value:
           `> \n` +
           `> ⭐ **Score:** ${userData.score.toLocaleString("pt-BR")}\n` +
+          `> 🎮 **Partidas:** ${(userData.rounds || 0).toLocaleString(
+            "pt-BR"
+          )}\n` +
           `> 🤝 **Teamwork:** ${userData.teamWorkScore.toLocaleString(
             "pt-BR"
           )}\n` +

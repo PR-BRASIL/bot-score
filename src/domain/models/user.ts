@@ -8,4 +8,5 @@ export interface User {
   deaths: number;
   score: number;
   totalTime: number;
+  rounds: number;
 }
