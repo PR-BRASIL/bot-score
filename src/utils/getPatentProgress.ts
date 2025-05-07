@@ -10,7 +10,7 @@ export class GetPatentProgress {
     const patentWithSort = patents.sort((a, b) => a.score - b.score);
     const patentIndex = patentWithSort.findIndex((p) => p.score > score);
 
-    const REPEAT = 20;
+    const REPEAT = 13;
     if (!patentWithSort[patentIndex - 1])
       return "[" + "▰".repeat(REPEAT) + "] (Max Level)";
 
@@ -20,17 +20,22 @@ export class GetPatentProgress {
 
     const actualPatenScore = patentWithSort[patentIndex - 1].score;
 
+    // Obter o texto da próxima patente para extrair o ícone
+    const nextPatentText = patentWithSort[patentIndex].text;
+
     return this.getProgressBar(
       score - actualPatenScore,
       nextScore - actualPatenScore,
-      REPEAT
+      REPEAT,
+      nextPatentText
     );
   }
 
   public getProgressBar(
     currentValue: number,
     desiredValue: number,
-    barSize: number
+    barSize: number,
+    nextPatentText?: string
   ): string {
     if (currentValue < 0 || currentValue > desiredValue) {
       throw new Error("Invalid current value");
@@ -44,7 +49,7 @@ export class GetPatentProgress {
 
     const filledCharacters = Math.floor((percentageComplete / 100) * barSize);
 
-    let progressBar = "Next level: [";
+    let progressBar = "**Proximo nível:** [";
     for (let i = 0; i < barSize; i++) {
       if (i < filledCharacters) {
         progressBar += "▰";
@@ -52,7 +57,15 @@ export class GetPatentProgress {
         progressBar += "▱";
       }
     }
-    progressBar += `] (${currentValue}/${desiredValue})`;
+
+    // Adicionar o ícone da próxima patente se disponível
+    if (nextPatentText) {
+      const patentParts = nextPatentText.split(" <");
+      const icon = patentParts.length > 1 ? `<${patentParts[1]}` : "";
+      progressBar += `] **(${currentValue}/${desiredValue} ${icon})** `;
+    } else {
+      progressBar += `] (${currentValue}/${desiredValue})`;
+    }
 
     return progressBar;
   }
