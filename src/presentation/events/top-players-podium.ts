@@ -34,13 +34,16 @@ export class TopPlayersPodium {
       return;
     }
 
+    // Reverse the array to display from bottom to top
+    topPlayers.reverse();
+
     const embed = new EmbedBuilder()
       .setColor(0xffd700)
       .setAuthor({
         name: "Reality Brasil",
         iconURL: channel.guild.iconURL() || undefined,
       })
-      .setTitle("🏆 Top 6 Melhores Jogadores")
+      .setTitle("🏆 Top 25 Melhores Jogadores")
       .setDescription(
         "Ranking dos melhores jogadores do Reality Brasil!\n" +
           "⚡ **DICA:** Jogue entre 7h e 14h para ganhar o **DOBRO** de pontuação!\n" +
@@ -53,25 +56,43 @@ export class TopPlayersPodium {
         "https://media.discordapp.net/attachments/1162222580644708372/1274439425354371072/Capa_GitBook.png?ex=67df05b4&is=67ddb434&hm=e7f9eb86c1d74c0e1de0414f3dab11023f0820ea8431edfe0812e5afe80de930&=&format=webp&quality=lossless"
       );
 
-    // Top 3 players with special formatting
-    const [first, second, third, ...rest] = topPlayers;
-
-    if (first) {
-      const firstPatent = await getPatent(first.score);
-      const progress = await new GetPatentProgress().get(first.score);
-      const patent = firstPatent.split(" <");
+    // Display players 25 to 4 first
+    const restPlayers = topPlayers.slice(0, -3);
+    for (const [index, player] of restPlayers.entries()) {
+      const position = 25 - index; // Calculate correct position
+      const patent = (await getPatent(player.score)).split(" <");
       embed.addFields({
-        name: `<a:first:1353055748262989867> 1º Lugar - ${first.name}`,
+        name: `${position}º Lugar - ${player.name}`,
+        value: `> \n> **<${patent[1]} ${
+          patent[0]
+        }**\n> \n> ⭐ **Score:** ${player.score.toLocaleString(
+          "pt-BR"
+        )}\n> 🎮 **Partidas:** ${player.rounds || 0}\n> 🎯 **K/D:** ${
+          player.kills
+        } / ${player.deaths} (${(player.kills / player.deaths).toFixed(2)})`,
+        inline: false,
+      });
+    }
+
+    // Then display top 3 with special formatting
+    const [third, second, first] = topPlayers.slice(-3);
+
+    if (third) {
+      const thirdPatent = await getPatent(third.score);
+      const patent = thirdPatent.split(" <");
+      const progress = await new GetPatentProgress().get(third.score);
+      embed.addFields({
+        name: `🥉 3º Lugar - ${third.name}`,
         value: `> \n> **<${patent[1] || ""} ${
           patent[0]
-        }**\n> \n> ⭐ **Score:** ${first.score.toLocaleString(
+        }**\n> \n> ⭐ **Score:** ${third.score.toLocaleString(
           "pt-BR"
         )}\n> 🎮 **Partidas:** ${
-          first.rounds || 0
-        }\n> 🤝 **Teamwork:** ${first.teamWorkScore.toLocaleString(
+          third.rounds || 0
+        }\n> 🤝 **Teamwork:** ${third.teamWorkScore.toLocaleString(
           "pt-BR"
-        )}\n> 🎯 **K/D:** ${first.kills} / ${first.deaths} (${(
-          first.kills / first.deaths
+        )}\n> 🎯 **K/D:** ${third.kills} / ${third.deaths} (${(
+          third.kills / third.deaths
         ).toFixed(2)})\n> **${progress}**`,
         inline: false,
       });
@@ -98,39 +119,23 @@ export class TopPlayersPodium {
       });
     }
 
-    if (third) {
-      const thirdPatent = await getPatent(third.score);
-      const patent = thirdPatent.split(" <");
-      const progress = await new GetPatentProgress().get(third.score);
+    if (first) {
+      const firstPatent = await getPatent(first.score);
+      const progress = await new GetPatentProgress().get(first.score);
+      const patent = firstPatent.split(" <");
       embed.addFields({
-        name: `🥉 3º Lugar - ${third.name}`,
+        name: `<a:first:1353055748262989867> 1º Lugar - ${first.name}`,
         value: `> \n> **<${patent[1] || ""} ${
           patent[0]
-        }**\n> \n> ⭐ **Score:** ${third.score.toLocaleString(
+        }**\n> \n> ⭐ **Score:** ${first.score.toLocaleString(
           "pt-BR"
         )}\n> 🎮 **Partidas:** ${
-          third.rounds || 0
-        }\n> 🤝 **Teamwork:** ${third.teamWorkScore.toLocaleString(
+          first.rounds || 0
+        }\n> 🤝 **Teamwork:** ${first.teamWorkScore.toLocaleString(
           "pt-BR"
-        )}\n> 🎯 **K/D:** ${third.kills} / ${third.deaths} (${(
-          third.kills / third.deaths
+        )}\n> 🎯 **K/D:** ${first.kills} / ${first.deaths} (${(
+          first.kills / first.deaths
         ).toFixed(2)})\n> **${progress}**`,
-        inline: false,
-      });
-    }
-
-    for (const [index, player] of rest.entries()) {
-      const position = index + 4; // Começa do 4º lugar
-      const patent = (await getPatent(player.score)).split(" <");
-      embed.addFields({
-        name: `${position}º Lugar - ${player.name}`,
-        value: `> \n> **<${patent[1]} ${
-          patent[0]
-        }**\n> \n> ⭐ **Score:** ${player.score.toLocaleString(
-          "pt-BR"
-        )}\n> 🎮 **Partidas:** ${player.rounds || 0}\n> 🎯 **K/D:** ${
-          player.kills
-        } / ${player.deaths} (${(player.kills / player.deaths).toFixed(2)})`,
         inline: false,
       });
     }
