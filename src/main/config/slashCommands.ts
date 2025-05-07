@@ -44,6 +44,12 @@ export const slashCommands = [
             "Número máximo de jogadores para mostrar (padrão: 25)"
           )
           .setRequired(false)
+      )
+      .addStringOption((option) =>
+        option
+          .setName("buscar")
+          .setDescription("Buscar um jogador específico no ranking")
+          .setRequired(false)
       ),
     execute: async (interaction: ChatInputCommandInteraction) => {
       await makeTopPlayersCommand().execute(interaction);

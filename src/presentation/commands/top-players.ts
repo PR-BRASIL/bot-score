@@ -21,6 +21,7 @@ export class TopPlayersCommand implements Command {
   ): Promise<void> {
     // Get total number of players to show from command options, default to 25
     const limit = interaction.options.getInteger("limit") || 25;
+    const searchTerm = interaction.options.getString("buscar");
 
     // Fetch the top players
     const topPlayers = await this.getTopPlayersRepository.getTopPlayers(limit);
@@ -37,8 +38,33 @@ export class TopPlayersCommand implements Command {
     let currentPage = 0;
     const totalPages = Math.ceil(topPlayers.length / this.playersPerPage);
 
+    // Store the found player index for highlighting
+    let foundPlayerIndex = -1;
+
+    // If search term is provided, find the player and set the page accordingly
+    if (searchTerm) {
+      const lowerSearchTerm = searchTerm.toLowerCase();
+      foundPlayerIndex = topPlayers.findIndex((player) =>
+        player.name.toLowerCase().includes(lowerSearchTerm)
+      );
+
+      if (foundPlayerIndex !== -1) {
+        currentPage = Math.floor(foundPlayerIndex / this.playersPerPage);
+      } else {
+        await interaction.reply({
+          content: `Jogador com nome "${searchTerm}" não encontrado no ranking!`,
+          ephemeral: true,
+        });
+        return;
+      }
+    }
+
     // Create the initial embed
-    const embed = await this.createEmbed(topPlayers, currentPage);
+    const embed = await this.createEmbed(
+      topPlayers,
+      currentPage,
+      foundPlayerIndex
+    );
 
     // Create navigation buttons
     const row = this.createButtons(currentPage, totalPages);
@@ -79,7 +105,11 @@ export class TopPlayersCommand implements Command {
       }
 
       // Update embed and buttons
-      const updatedEmbed = await this.createEmbed(topPlayers, currentPage);
+      const updatedEmbed = await this.createEmbed(
+        topPlayers,
+        currentPage,
+        foundPlayerIndex
+      );
       const updatedRow = this.createButtons(currentPage, totalPages);
 
       // Update the message
@@ -132,7 +162,11 @@ export class TopPlayersCommand implements Command {
     return row;
   }
 
-  private async createEmbed(topPlayers: any[], currentPage: number) {
+  private async createEmbed(
+    topPlayers: any[],
+    currentPage: number,
+    highlightPlayerIndex: number = -1
+  ) {
     const startIndex = currentPage * this.playersPerPage;
     const endIndex = Math.min(
       startIndex + this.playersPerPage,
@@ -160,6 +194,8 @@ export class TopPlayersCommand implements Command {
       const patent = (await getPatent(player.score)).split(" <");
       const progress = await new GetPatentProgress().get(player.score);
 
+      const isHighlighted = startIndex + i === highlightPlayerIndex;
+
       // Special formatting for top 3 players
       let positionDisplay = `${position}º Lugar`;
       if (position === 1)
@@ -167,15 +203,19 @@ export class TopPlayersCommand implements Command {
       else if (position === 2) positionDisplay = "🥈 2º Lugar";
       else if (position === 3) positionDisplay = "🥉 3º Lugar";
 
+      // Add search highlight if this is the searched player
+      if (isHighlighted) {
+        positionDisplay = `🔍 ${positionDisplay}`;
+      }
+
       const kdRatio =
         player.deaths > 0
           ? (player.kills / player.deaths).toFixed(2)
           : player.kills.toFixed(2);
 
-      embed.addFields({
-        name: `${positionDisplay} - ${player.name}`,
-        value:
-          `> \n> **<${patent[1] || ""} ${patent[0]}**\n> \n` +
+      const fieldValue = isHighlighted
+        ? `> \n> **<${patent[1] || ""} ${patent[0]}**\n> \n` +
+          `> **🔍 JOGADOR ENCONTRADO 🔍**\n` +
           `> ⭐ **Score:** ${player.score.toLocaleString("pt-BR")}\n` +
           `> 🎮 **Partidas:** ${(player.rounds || 0).toLocaleString(
             "pt-BR"
@@ -186,7 +226,23 @@ export class TopPlayersCommand implements Command {
           `> 🎯 **K/D:** ${player.kills.toLocaleString(
             "pt-BR"
           )} / ${player.deaths.toLocaleString("pt-BR")} (${kdRatio})\n` +
-          `> **${progress}**`,
+          `> **${progress}**`
+        : `> \n> **<${patent[1] || ""} ${patent[0]}**\n> \n` +
+          `> ⭐ **Score:** ${player.score.toLocaleString("pt-BR")}\n` +
+          `> 🎮 **Partidas:** ${(player.rounds || 0).toLocaleString(
+            "pt-BR"
+          )}\n` +
+          `> 🤝 **Teamwork:** ${player.teamWorkScore.toLocaleString(
+            "pt-BR"
+          )}\n` +
+          `> 🎯 **K/D:** ${player.kills.toLocaleString(
+            "pt-BR"
+          )} / ${player.deaths.toLocaleString("pt-BR")} (${kdRatio})\n` +
+          `> **${progress}**`;
+
+      embed.addFields({
+        name: `${positionDisplay} - ${player.name}`,
+        value: fieldValue,
         inline: false,
       });
     }
