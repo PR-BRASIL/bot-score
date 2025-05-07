@@ -47,7 +47,6 @@ export class TopClansPodium {
           "Utilize o comando `/stats` para ver as informações de um jogador específico.\n" +
           "Utilize o comando `/clastats` para ver as informações de um clã específico."
       )
-      .setThumbnail(channel.guild.iconURL() || null)
       .setTimestamp()
       .setImage(
         "https://media.discordapp.net/attachments/1162222580644708372/1274439425354371072/Capa_GitBook.png?ex=67df05b4&is=67ddb434&hm=e7f9eb86c1d74c0e1de0414f3dab11023f0820ea8431edfe0812e5afe80de930&=&format=webp&quality=lossless"
