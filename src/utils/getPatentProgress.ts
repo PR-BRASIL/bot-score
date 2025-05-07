@@ -10,7 +10,7 @@ export class GetPatentProgress {
     const patentWithSort = patents.sort((a, b) => a.score - b.score);
     const patentIndex = patentWithSort.findIndex((p) => p.score > score);
 
-    const REPEAT = 13;
+    const REPEAT = 14;
     if (!patentWithSort[patentIndex - 1])
       return "[" + "▰".repeat(REPEAT) + "] (Max Level)";
 
@@ -49,7 +49,7 @@ export class GetPatentProgress {
 
     const filledCharacters = Math.floor((percentageComplete / 100) * barSize);
 
-    let progressBar = "**Proximo nível:** [";
+    let progressBar = "Proximo nível: [";
     for (let i = 0; i < barSize; i++) {
       if (i < filledCharacters) {
         progressBar += "▰";
@@ -62,7 +62,7 @@ export class GetPatentProgress {
     if (nextPatentText) {
       const patentParts = nextPatentText.split(" <");
       const icon = patentParts.length > 1 ? `<${patentParts[1]}` : "";
-      progressBar += `] **(${currentValue}/${desiredValue} ${icon})** `;
+      progressBar += `] (${currentValue}/${desiredValue} ${icon}) `;
     } else {
       progressBar += `] (${currentValue}/${desiredValue})`;
     }

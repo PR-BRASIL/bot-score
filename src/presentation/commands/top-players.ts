@@ -192,7 +192,8 @@ export class TopPlayersCommand implements Command {
       const player = playersOnPage[i];
       const position = startIndex + i + 1;
       const patent = (await getPatent(player.score)).split(" <");
-      const progress = await new GetPatentProgress().get(player.score);
+      const progress =
+        "**" + (await new GetPatentProgress().get(player.score)) + "**";
 
       const isHighlighted = startIndex + i === highlightPlayerIndex;
 
