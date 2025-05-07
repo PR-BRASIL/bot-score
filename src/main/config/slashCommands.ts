@@ -41,14 +41,14 @@ export const slashCommands = [
         option
           .setName("limit")
           .setDescription(
-            "Número máximo de jogadores para mostrar (padrão: 25)"
+            "Número máximo de jogadores para mostrar (padrão: 500)"
           )
           .setRequired(false)
       )
       .addStringOption((option) =>
         option
           .setName("buscar")
-          .setDescription("Buscar um jogador específico no ranking")
+          .setDescription("Buscar um nome específico no ranking")
           .setRequired(false)
       ),
     execute: async (interaction: ChatInputCommandInteraction) => {

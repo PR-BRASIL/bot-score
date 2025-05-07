@@ -12,7 +12,7 @@ import { getPatent } from "../../utils/patents";
 import { GetPatentProgress } from "../../utils/getPatentProgress";
 
 export class TopPlayersCommand implements Command {
-  private readonly playersPerPage = 5;
+  private readonly playersPerPage = 6;
 
   public constructor(private readonly getTopPlayersRepository: GetTopPlayers) {}
 
@@ -20,7 +20,7 @@ export class TopPlayersCommand implements Command {
     interaction: ChatInputCommandInteraction
   ): Promise<void> {
     // Get total number of players to show from command options, default to 25
-    const limit = interaction.options.getInteger("limit") || 25;
+    const limit = interaction.options.getInteger("limit") || 500;
     const searchTerm = interaction.options.getString("buscar");
 
     // Fetch the top players
