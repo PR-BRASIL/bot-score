@@ -22,7 +22,7 @@ const clanTagList: string[] = [
   "L|N",
   "DOT",
   "=IO",
-  "[FI",
+  "[FI]",
   "SSB",
   "GTC",
   "SOG",

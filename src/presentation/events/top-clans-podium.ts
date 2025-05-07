@@ -27,10 +27,12 @@ export class TopClansPodium {
       }
     }
 
-    const topClans = await this.getTopClans.getTopClans(6);
+    const topClans = await this.getTopClans.getTopClans(25);
     if (!topClans || topClans.length === 0) {
       return;
     }
+
+    topClans.reverse();
 
     const embed = new EmbedBuilder()
       .setColor(0xffd700)
@@ -38,7 +40,7 @@ export class TopClansPodium {
         name: "Reality Brasil",
         iconURL: channel.guild.iconURL() || undefined,
       })
-      .setTitle("🏆 Top 6 Melhores Clãs")
+      .setTitle("🏆 Top 25 Melhores Clãs")
       .setDescription(
         "Ranking dos melhores clãs do Reality Brasil!\n" +
           "⚡ **DICA PARA CLÃS:** Incentive seus membros a jogar entre 7h e 14h para ganhar o **DOBRO** de pontuação!\n" +
@@ -52,24 +54,47 @@ export class TopClansPodium {
       );
 
     // Top 3 clãs com formatação especial
-    const [first, second, third, ...rest] = topClans;
+    const rest = topClans.slice(0, -3);
 
-    if (first) {
+    for (const [index, clan] of rest.entries()) {
+      const position = 25 - index; // Começa do 4º lugar
       const kdRatio =
-        first.totalDeaths > 0
-          ? (first.totalKills / first.totalDeaths).toFixed(2)
-          : first.totalKills.toFixed(2);
+        clan.totalDeaths > 0
+          ? (clan.totalKills / clan.totalDeaths).toFixed(2)
+          : clan.totalKills.toFixed(2);
       embed.addFields({
-        name: `👑 1º Lugar - ${first.name}`,
-        value: `> 👥 **Membros:** ${first.memberCount.toLocaleString(
+        name: `${position}º Lugar - ${clan.name}`,
+        value: `> 👥 **Membros:** ${clan.memberCount.toLocaleString(
           "pt-BR"
-        )}\n> ⭐ **Score Total:** ${first.totalScore.toLocaleString(
+        )}\n> ⭐ **Score Total:** ${clan.totalScore.toLocaleString(
           "pt-BR"
-        )}\n> 🤝 **Teamwork Total:** ${first.totalTeamWorkScore.toLocaleString(
+        )}\n> 🤝 **Teamwork Total:** ${clan.totalTeamWorkScore.toLocaleString(
           "pt-BR"
-        )}\n> 🎯 **K/D Total:** ${first.totalKills.toLocaleString(
+        )}\n> 🎯 **K/D Total:** ${clan.totalKills.toLocaleString(
           "pt-BR"
-        )} / ${first.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})`,
+        )} / ${clan.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})`,
+        inline: false,
+      });
+    }
+
+    const [third, second, first] = topClans.slice(-3);
+
+    if (third) {
+      const kdRatio =
+        third.totalDeaths > 0
+          ? (third.totalKills / third.totalDeaths).toFixed(2)
+          : third.totalKills.toFixed(2);
+      embed.addFields({
+        name: `🥉 3º Lugar - ${third.name}`,
+        value: `> 👥 **Membros:** ${third.memberCount.toLocaleString(
+          "pt-BR"
+        )}\n> ⭐ **Score Total:** ${third.totalScore.toLocaleString(
+          "pt-BR"
+        )}\n> 🤝 **Teamwork Total:** ${third.totalTeamWorkScore.toLocaleString(
+          "pt-BR"
+        )}\n> 🎯 **K/D Total:** ${third.totalKills.toLocaleString(
+          "pt-BR"
+        )} / ${third.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})`,
         inline: false,
       });
     }
@@ -94,43 +119,22 @@ export class TopClansPodium {
       });
     }
 
-    if (third) {
+    if (first) {
       const kdRatio =
-        third.totalDeaths > 0
-          ? (third.totalKills / third.totalDeaths).toFixed(2)
-          : third.totalKills.toFixed(2);
+        first.totalDeaths > 0
+          ? (first.totalKills / first.totalDeaths).toFixed(2)
+          : first.totalKills.toFixed(2);
       embed.addFields({
-        name: `🥉 3º Lugar - ${third.name}`,
-        value: `> 👥 **Membros:** ${third.memberCount.toLocaleString(
+        name: `👑 1º Lugar - ${first.name}`,
+        value: `> 👥 **Membros:** ${first.memberCount.toLocaleString(
           "pt-BR"
-        )}\n> ⭐ **Score Total:** ${third.totalScore.toLocaleString(
+        )}\n> ⭐ **Score Total:** ${first.totalScore.toLocaleString(
           "pt-BR"
-        )}\n> 🤝 **Teamwork Total:** ${third.totalTeamWorkScore.toLocaleString(
+        )}\n> 🤝 **Teamwork Total:** ${first.totalTeamWorkScore.toLocaleString(
           "pt-BR"
-        )}\n> 🎯 **K/D Total:** ${third.totalKills.toLocaleString(
+        )}\n> 🎯 **K/D Total:** ${first.totalKills.toLocaleString(
           "pt-BR"
-        )} / ${third.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})`,
-        inline: false,
-      });
-    }
-
-    for (const [index, clan] of rest.entries()) {
-      const position = index + 4; // Começa do 4º lugar
-      const kdRatio =
-        clan.totalDeaths > 0
-          ? (clan.totalKills / clan.totalDeaths).toFixed(2)
-          : clan.totalKills.toFixed(2);
-      embed.addFields({
-        name: `${position}º Lugar - ${clan.name}`,
-        value: `> 👥 **Membros:** ${clan.memberCount.toLocaleString(
-          "pt-BR"
-        )}\n> ⭐ **Score Total:** ${clan.totalScore.toLocaleString(
-          "pt-BR"
-        )}\n> 🤝 **Teamwork Total:** ${clan.totalTeamWorkScore.toLocaleString(
-          "pt-BR"
-        )}\n> 🎯 **K/D Total:** ${clan.totalKills.toLocaleString(
-          "pt-BR"
-        )} / ${clan.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})`,
+        )} / ${first.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})`,
         inline: false,
       });
     }
