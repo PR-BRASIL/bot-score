@@ -29,7 +29,7 @@ export class TopPlayersPodium {
       }
     }
 
-    const topPlayers = await this.getTopPlayers.getTopPlayers(6);
+    const topPlayers = await this.getTopPlayers.getTopPlayers(25);
     if (!topPlayers || topPlayers.length === 0) {
       return;
     }
@@ -128,13 +128,9 @@ export class TopPlayersPodium {
           patent[0]
         }**\n> \n> ⭐ **Score:** ${player.score.toLocaleString(
           "pt-BR"
-        )}\n> 🎮 **Partidas:** ${
-          player.rounds || 0
-        }\n> 🤝 **Teamwork:** ${player.teamWorkScore.toLocaleString(
-          "pt-BR"
-        )}\n> 🎯 **K/D:** ${player.kills} / ${player.deaths} (${(
-          player.kills / player.deaths
-        ).toFixed(2)})`,
+        )}\n> 🎮 **Partidas:** ${player.rounds || 0}\n> 🎯 **K/D:** ${
+          player.kills
+        } / ${player.deaths} (${(player.kills / player.deaths).toFixed(2)})`,
         inline: false,
       });
     }
