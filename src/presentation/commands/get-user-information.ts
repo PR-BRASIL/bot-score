@@ -57,6 +57,9 @@ export class GetUserInformationCommand implements Command {
       .setDescription(
         `📋 Informações detalhadas do jogador **${userData.name}**\n` +
           `✨ Pontos contabilizados apenas de partidas no **Reality Brasil**\n` +
+          `🏆 **Ranking:** #${userData.rank.toLocaleString(
+            "pt-BR"
+          )} com **${userData.score.toLocaleString("pt-BR")}** pontos\n` +
           `⚡ **DICA:** Jogue entre 7h e 14h para ganhar o **DOBRO** de pontuação!`
       )
       .addFields({
@@ -68,7 +71,7 @@ export class GetUserInformationCommand implements Command {
         name: "📈 Estatísticas",
         value:
           `> \n` +
-          `> ⭐ **Score:** ${userData.score.toLocaleString("pt-BR")}\n` +
+          `> ⭐ **Score:** ${userData.score.toLocaleString("pt-BR")} pontos\n` +
           `> 🎮 **Partidas:** ${(userData.rounds || 0).toLocaleString(
             "pt-BR"
           )}\n` +

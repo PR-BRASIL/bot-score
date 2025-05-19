@@ -31,6 +31,7 @@ export interface Clan {
   totalKills: number;
   totalDeaths: number;
   totalTimeOnline: number;
+  points: number;
   members: User[];
 }
 

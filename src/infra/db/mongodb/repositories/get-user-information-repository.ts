@@ -26,6 +26,8 @@ export class MongoGetUserInformationRepository
 
   async getTopClans(limit: number): Promise<Clan[]> {
     this.collection = await mongoHelper.getCollection("user");
+    const clanCollection = await mongoHelper.getCollection("clan");
+
     const users = await this.collection.find<User>({}).toArray();
 
     // Agrupar usuários por clã
@@ -57,9 +59,12 @@ export class MongoGetUserInformationRepository
         0
       );
 
+      const clan = await clanCollection.findOne({ name: clanName });
+
       clans.push({
         name: clanName,
         memberCount: members.length,
+        points: clan?.points || 0,
         totalScore,
         totalTeamWorkScore,
         totalKills,
@@ -70,7 +75,7 @@ export class MongoGetUserInformationRepository
     }
 
     // Ordenar clãs por pontuação total (decrescente)
-    clans.sort((a, b) => b.totalScore - a.totalScore);
+    clans.sort((a, b) => b.points - a.points);
 
     // Limitar a quantidade de clãs retornados
     return clans.slice(0, limit);

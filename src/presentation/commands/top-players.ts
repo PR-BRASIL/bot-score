@@ -179,9 +179,9 @@ export class TopPlayersCommand implements Command {
       .setAuthor({
         name: "Reality Brasil",
       })
-      .setTitle("🏆 Top Players")
+      .setTitle("🏆 Top Players - Ranking por Pontuação")
       .setDescription(
-        "Ranking dos melhores jogadores do Reality Brasil!\n" +
+        "Ranking dos melhores jogadores do Reality Brasil ordenados por pontuação!\n" +
           "⚡ **DICA:** Jogue entre 7h e 14h para ganhar o **DOBRO** de pontuação!\n" +
           "Utilize o comando `/stats` para ver as informações de um jogador específico.\n" +
           "Utilize o comando `/clastats` para ver as informações de um clã específico."
@@ -217,7 +217,7 @@ export class TopPlayersCommand implements Command {
       const fieldValue = isHighlighted
         ? `> \n> **<${patent[1] || ""} ${patent[0]}**\n> \n` +
           `> **🔍 JOGADOR ENCONTRADO 🔍**\n` +
-          `> ⭐ **Score:** ${player.score.toLocaleString("pt-BR")}\n` +
+          `> ⭐ **Score:** ${player.score.toLocaleString("pt-BR")} pontos\n` +
           `> 🎮 **Partidas:** ${(player.rounds || 0).toLocaleString(
             "pt-BR"
           )}\n` +
@@ -229,7 +229,7 @@ export class TopPlayersCommand implements Command {
           )} / ${player.deaths.toLocaleString("pt-BR")} (${kdRatio})\n` +
           `> **${progress}**`
         : `> \n> **<${patent[1] || ""} ${patent[0]}**\n> \n` +
-          `> ⭐ **Score:** ${player.score.toLocaleString("pt-BR")}\n` +
+          `> ⭐ **Score:** ${player.score.toLocaleString("pt-BR")} pontos\n` +
           `> 🎮 **Partidas:** ${(player.rounds || 0).toLocaleString(
             "pt-BR"
           )}\n` +
@@ -242,7 +242,9 @@ export class TopPlayersCommand implements Command {
           `> **${progress}**`;
 
       embed.addFields({
-        name: `${positionDisplay} - ${player.name}`,
+        name: `${positionDisplay} - ${
+          player.name
+        } (${player.score.toLocaleString("pt-BR")} pts)`,
         value: fieldValue,
         inline: false,
       });

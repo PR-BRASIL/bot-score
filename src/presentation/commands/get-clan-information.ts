@@ -119,6 +119,9 @@ export class GetClanInformationCommand implements Command {
       .setDescription(
         `📋 Informações detalhadas do clã **${clan.name}**\n` +
           `✨ Pontos contabilizados apenas de partidas no **Reality Brasil**\n` +
+          `🏆 **Ranking:** #${clanRank.toLocaleString(
+            "pt-BR"
+          )} com **${clan.totalScore.toLocaleString("pt-BR")}** pontos\n` +
           `⚡ **DICA PARA CLÃS:** Incentive seus membros a jogar entre 7h e 14h para ganhar o **DOBRO** de pontuação!`
       )
       .addFields({
@@ -126,7 +129,9 @@ export class GetClanInformationCommand implements Command {
         value:
           `> \n` +
           `> 👥 **Membros:** ${clan.memberCount.toLocaleString("pt-BR")}\n` +
-          `> ⭐ **Score Total:** ${clan.totalScore.toLocaleString("pt-BR")}\n` +
+          `> ⭐ **Score Total:** ${clan.totalScore.toLocaleString(
+            "pt-BR"
+          )} pontos\n` +
           `> 🤝 **Teamwork Total:** ${clan.totalTeamWorkScore.toLocaleString(
             "pt-BR"
           )}\n` +
