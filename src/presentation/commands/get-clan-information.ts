@@ -100,7 +100,7 @@ export class GetClanInformationCommand implements Command {
     for (const [index, member] of membersToShow.entries()) {
       membersString += `> **${index + 1}.** ${
         member.name
-      } - ${member.score.toLocaleString("pt-BR")} pontos\n`;
+      } - **${member.score.toLocaleString("pt-BR")}** pontos\n`;
     }
 
     // Se houver mais membros que não couberam na lista
@@ -121,7 +121,7 @@ export class GetClanInformationCommand implements Command {
           `✨ Pontos contabilizados apenas de partidas no **Reality Brasil**\n` +
           `🏆 **Ranking:** #${clanRank.toLocaleString(
             "pt-BR"
-          )} com **${clan.totalScore.toLocaleString("pt-BR")}** pontos\n` +
+          )} com **${clan.points.toLocaleString("pt-BR")}** pontos\n` +
           `⚡ **DICA PARA CLÃS:** Incentive seus membros a jogar entre 7h e 14h para ganhar o **DOBRO** de pontuação!`
       )
       .addFields({
@@ -129,7 +129,10 @@ export class GetClanInformationCommand implements Command {
         value:
           `> \n` +
           `> 👥 **Membros:** ${clan.memberCount.toLocaleString("pt-BR")}\n` +
-          `> ⭐ **Score Total:** ${clan.totalScore.toLocaleString(
+          `> ⭐ **Score dos Jogadores:** ${clan.totalScore.toLocaleString(
+            "pt-BR"
+          )} pontos\n` +
+          `> ⭐ **Pontuação do Clã:** ${clan.points.toLocaleString(
             "pt-BR"
           )} pontos\n` +
           `> 🤝 **Teamwork Total:** ${clan.totalTeamWorkScore.toLocaleString(
@@ -142,7 +145,7 @@ export class GetClanInformationCommand implements Command {
         inline: false,
       })
       .addFields({
-        name: "👥 Membros do Clã (Top 10)",
+        name: "👥 Membros do Clã (Top 10 por Pontuação)",
         value: membersString || "> *Nenhum membro encontrado*",
         inline: false,
       });

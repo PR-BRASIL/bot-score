@@ -28,25 +28,14 @@ export class MongoGetUserInformationRepository
     this.collection = await mongoHelper.getCollection("user");
     const clanCollection = await mongoHelper.getCollection("clan");
 
-    const users = await this.collection.find<User>({}).toArray();
-
-    // Agrupar usuários por clã
-    const clanMap = new Map<string, User[]>();
-
-    for (const user of users) {
-      const clanName = extractClanName(user.name);
-      if (clanName) {
-        if (!clanMap.has(clanName)) {
-          clanMap.set(clanName, []);
-        }
-        clanMap.get(clanName).push(user);
-      }
-    }
-
-    // Converter map para array de clãs com estatísticas agregadas
+    const clansData = await clanCollection.find({}).toArray();
     const clans: Clan[] = [];
 
-    for (const [clanName, members] of clanMap.entries()) {
+    for (const clanData of clansData) {
+      const members = await this.collection
+        .find<User>({ hash: { $in: clanData.membersHash } })
+        .toArray();
+
       const totalScore = members.reduce((sum, user) => sum + user.score, 0);
       const totalTeamWorkScore = members.reduce(
         (sum, user) => sum + user.teamWorkScore,
@@ -59,12 +48,10 @@ export class MongoGetUserInformationRepository
         0
       );
 
-      const clan = await clanCollection.findOne({ name: clanName });
-
       clans.push({
-        name: clanName,
+        name: clanData.name,
         memberCount: members.length,
-        points: clan?.points || 0,
+        points: clanData.points || 0,
         totalScore,
         totalTeamWorkScore,
         totalKills,
@@ -74,10 +61,10 @@ export class MongoGetUserInformationRepository
       });
     }
 
-    // Ordenar clãs por pontuação total (decrescente)
+    // Sort clans by points (descending)
     clans.sort((a, b) => b.points - a.points);
 
-    // Limitar a quantidade de clãs retornados
+    // Limit the number of clans returned
     return clans.slice(0, limit);
   }
 }
