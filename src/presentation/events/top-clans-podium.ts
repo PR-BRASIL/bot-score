@@ -65,7 +65,7 @@ export class TopClansPodium {
         name: `${position}º Lugar - ${clan.name}`,
         value: `> 👥 **Membros:** ${clan.memberCount.toLocaleString(
           "pt-BR"
-        )}\n> ⭐ **Score Total:** ${clan.totalScore.toLocaleString(
+        )}\n> ⭐ **Pontuação do Clã:** ${clan.points.toLocaleString(
           "pt-BR"
         )}\n> 🤝 **Teamwork Total:** ${clan.totalTeamWorkScore.toLocaleString(
           "pt-BR"
@@ -87,7 +87,7 @@ export class TopClansPodium {
         name: `🥉 3º Lugar - ${third.name}`,
         value: `> 👥 **Membros:** ${third.memberCount.toLocaleString(
           "pt-BR"
-        )}\n> ⭐ **Score Total:** ${third.totalScore.toLocaleString(
+        )}\n> ⭐ **Pontuação do Clã:** ${third.points.toLocaleString(
           "pt-BR"
         )}\n> 🤝 **Teamwork Total:** ${third.totalTeamWorkScore.toLocaleString(
           "pt-BR"
@@ -107,7 +107,7 @@ export class TopClansPodium {
         name: `🥈 2º Lugar - ${second.name}`,
         value: `> 👥 **Membros:** ${second.memberCount.toLocaleString(
           "pt-BR"
-        )}\n> ⭐ **Score Total:** ${second.totalScore.toLocaleString(
+        )}\n> ⭐ **Pontuação do Clã:** ${second.points.toLocaleString(
           "pt-BR"
         )}\n> 🤝 **Teamwork Total:** ${second.totalTeamWorkScore.toLocaleString(
           "pt-BR"
@@ -127,7 +127,7 @@ export class TopClansPodium {
         name: `👑 1º Lugar - ${first.name}`,
         value: `> 👥 **Membros:** ${first.memberCount.toLocaleString(
           "pt-BR"
-        )}\n> ⭐ **Score Total:** ${first.totalScore.toLocaleString(
+        )}\n> ⭐ **Pontuação do Clã:** ${first.points.toLocaleString(
           "pt-BR"
         )}\n> 🤝 **Teamwork Total:** ${first.totalTeamWorkScore.toLocaleString(
           "pt-BR"

@@ -129,9 +129,6 @@ export class GetClanInformationCommand implements Command {
         value:
           `> \n` +
           `> 👥 **Membros:** ${clan.memberCount.toLocaleString("pt-BR")}\n` +
-          `> ⭐ **Score dos Jogadores:** ${clan.totalScore.toLocaleString(
-            "pt-BR"
-          )} pontos\n` +
           `> ⭐ **Pontuação do Clã:** ${clan.points.toLocaleString(
             "pt-BR"
           )} pontos\n` +
@@ -145,7 +142,9 @@ export class GetClanInformationCommand implements Command {
         inline: false,
       })
       .addFields({
-        name: "👥 Membros do Clã (Top 10 por Pontuação)",
+        name: `👥 Membros do Clã (${clan.totalScore.toLocaleString(
+          "pt-BR"
+        )} pontos)`,
         value: membersString || "> *Nenhum membro encontrado*",
         inline: false,
       });
