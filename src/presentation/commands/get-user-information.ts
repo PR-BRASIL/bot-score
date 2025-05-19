@@ -15,21 +15,22 @@ export class GetUserInformationCommand implements Command {
   public async execute(
     interaction: ChatInputCommandInteraction
   ): Promise<void> {
+    // Acknowledge the interaction immediately
+    await interaction.deferReply({ ephemeral: true });
+
     const data = await this.getUserInformationRepository.get({
       nameOrHash: interaction.options.getString("hash-or-name"),
     });
 
     if (!data) {
-      await interaction.reply({
+      await interaction.editReply({
         content: "Usuário não encontrado!",
-        ephemeral: true,
       });
       return;
     }
 
-    interaction.reply({
+    await interaction.editReply({
       embeds: [await this.makeEmbed(interaction, data)],
-      ephemeral: true,
     });
   }
 

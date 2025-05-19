@@ -19,6 +19,9 @@ export class TopPlayersCommand implements Command {
   public async execute(
     interaction: ChatInputCommandInteraction
   ): Promise<void> {
+    // Acknowledge the interaction immediately
+    await interaction.deferReply({ ephemeral: true });
+
     // Get total number of players to show from command options, default to 25
     const limit = interaction.options.getInteger("limit") || 500;
     const searchTerm = interaction.options.getString("buscar");
@@ -27,9 +30,8 @@ export class TopPlayersCommand implements Command {
     const topPlayers = await this.getTopPlayersRepository.getTopPlayers(limit);
 
     if (!topPlayers || topPlayers.length === 0) {
-      await interaction.reply({
+      await interaction.editReply({
         content: "Não foi possível encontrar jogadores no ranking!",
-        ephemeral: true,
       });
       return;
     }
@@ -51,9 +53,8 @@ export class TopPlayersCommand implements Command {
       if (foundPlayerIndex !== -1) {
         currentPage = Math.floor(foundPlayerIndex / this.playersPerPage);
       } else {
-        await interaction.reply({
+        await interaction.editReply({
           content: `Jogador com nome "${searchTerm}" não encontrado no ranking!`,
-          ephemeral: true,
         });
         return;
       }
@@ -70,10 +71,9 @@ export class TopPlayersCommand implements Command {
     const row = this.createButtons(currentPage, totalPages);
 
     // Send the initial message with buttons
-    const response = await interaction.reply({
+    const response = await interaction.editReply({
       embeds: [embed],
       components: [row],
-      ephemeral: true, // Only visible to the command user
     });
 
     // Create a collector for button interactions
