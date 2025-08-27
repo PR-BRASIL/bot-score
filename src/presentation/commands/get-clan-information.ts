@@ -24,38 +24,29 @@ export class GetClanInformationCommand implements Command {
       return;
     }
 
-    // Buscar todos os clãs para encontrar o solicitado
-    const allClans = await this.getTopClansRepository.getTopClans(25);
+    // 🚀 OTIMIZAÇÃO: Buscar clã específico diretamente
+    let clan = await this.getTopClansRepository.getClanByName(clanNameParam);
 
-    // Tentativa 1: Busca exata pelo nome do clã (case insensitive)
-    let clan = allClans.find(
-      (c) => c.name.toLowerCase() === clanNameParam.toLowerCase()
-    );
-
-    // Tentativa 2: Se não encontrar exatamente, busca por clãs que contenham o termo
+    // Se não encontrou o clã exato, buscar clãs similares
     if (!clan) {
-      const possibleClans = allClans.filter((c) =>
-        c.name.toLowerCase().includes(clanNameParam.toLowerCase())
+      const similarClans = await this.getTopClansRepository.findSimilarClans(
+        clanNameParam,
+        5
       );
 
-      if (possibleClans.length === 1) {
-        // Se houver apenas um resultado, use-o
-        clan = possibleClans[0];
-      } else if (possibleClans.length > 1) {
-        // Se houver múltiplos resultados, mostre os primeiros 5
-        const clanList = possibleClans
-          .slice(0, 5)
+      if (similarClans.length === 1) {
+        // Se houver apenas um resultado similar, buscar os dados completos
+        clan = await this.getTopClansRepository.getClanByName(
+          similarClans[0].name
+        );
+      } else if (similarClans.length > 1) {
+        // Se houver múltiplos resultados, mostrar sugestões
+        const clanList = similarClans
           .map((c) => `• **${c.name}** (${c.memberCount} membros)`)
           .join("\n");
 
         await interaction.editReply({
-          content: `Encontrei ${
-            possibleClans.length
-          } clãs que correspondem à sua pesquisa. Por favor, seja mais específico:\n${clanList}${
-            possibleClans.length > 5
-              ? `\n*...e mais ${possibleClans.length - 5} clãs*`
-              : ""
-          }`,
+          content: `Encontrei ${similarClans.length} clãs que correspondem à sua pesquisa. Por favor, seja mais específico:\n${clanList}`,
         });
         return;
       }
@@ -68,7 +59,8 @@ export class GetClanInformationCommand implements Command {
       return;
     }
 
-    // Encontrar a posição do clã no ranking
+    // 🚀 OTIMIZAÇÃO: Só buscar ranking quando realmente precisar
+    const allClans = await this.getTopClansRepository.getTopClans(25);
     const clanRank = allClans.findIndex((c) => c.name === clan.name) + 1;
 
     await interaction.editReply({
@@ -157,7 +149,7 @@ export class GetClanInformationCommand implements Command {
     embed.setFooter({
       text: `Reality Brasil ・ Atualizado em ${new Date().toLocaleDateString(
         "pt-BR"
-      )}`,
+      )} ⚡ Otimizado`,
       iconURL: interaction.guild.iconURL(),
     });
 
