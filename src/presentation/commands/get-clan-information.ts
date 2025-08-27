@@ -1,4 +1,11 @@
-import { EmbedBuilder, type ChatInputCommandInteraction } from "discord.js";
+import {
+  EmbedBuilder,
+  type ChatInputCommandInteraction,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ComponentType,
+} from "discord.js";
 import type { Command } from "../protocols/command";
 import type {
   GetTopClans,
@@ -9,6 +16,8 @@ import { calculateTotalOnlineTime } from "../../utils/calculate-time-util";
 
 export class GetClanInformationCommand implements Command {
   public constructor(private readonly getTopClansRepository: GetTopClans) {}
+
+  private readonly membersPerPage = 5;
 
   public async execute(
     interaction: ChatInputCommandInteraction
@@ -63,47 +72,168 @@ export class GetClanInformationCommand implements Command {
     const allClans = await this.getTopClansRepository.getTopClans(25);
     const clanRank = allClans.findIndex((c) => c.name === clan.name) + 1;
 
-    await interaction.editReply({
-      embeds: [this.makeEmbed(interaction, clan, clanRank)],
+    // Paginação
+    let currentPage = 0;
+    const totalPages = Math.max(
+      1,
+      Math.ceil(clan.members.length / this.membersPerPage)
+    );
+
+    const embed = this.makeEmbed(
+      interaction,
+      clan,
+      clanRank,
+      currentPage,
+      totalPages
+    );
+    const row = this.createButtons(currentPage, totalPages);
+
+    const response = await interaction.editReply({
+      embeds: [embed],
+      components: totalPages > 1 ? [row] : [],
     });
+
+    if (totalPages <= 1) return;
+
+    // Coletor de interações dos botões
+    const collector = (
+      await interaction.fetchReply()
+    ).createMessageComponentCollector({
+      componentType: ComponentType.Button,
+      time: 300000, // 5 minutos
+    });
+
+    collector.on("collect", async (i) => {
+      if (i.user.id !== interaction.user.id) {
+        await i.reply({
+          content: "Você não pode usar estes botões.",
+          ephemeral: true,
+        });
+        return;
+      }
+
+      if (i.customId === "first") currentPage = 0;
+      if (i.customId === "previous") currentPage = Math.max(0, currentPage - 1);
+      if (i.customId === "next")
+        currentPage = Math.min(totalPages - 1, currentPage + 1);
+      if (i.customId === "last") currentPage = totalPages - 1;
+
+      const updatedEmbed = this.makeEmbed(
+        interaction,
+        clan,
+        clanRank,
+        currentPage,
+        totalPages
+      );
+      const updatedRow = this.createButtons(currentPage, totalPages);
+
+      await i.update({
+        embeds: [updatedEmbed],
+        components: [updatedRow],
+      });
+    });
+
+    collector.on("end", async () => {
+      await interaction.editReply({ components: [] }).catch(() => {});
+    });
+  }
+
+  private createButtons(currentPage: number, totalPages: number) {
+    const first = new ButtonBuilder()
+      .setCustomId("first")
+      .setLabel("⏮️ Primeiro")
+      .setStyle(ButtonStyle.Secondary)
+      .setDisabled(currentPage === 0);
+
+    const prev = new ButtonBuilder()
+      .setCustomId("previous")
+      .setLabel("◀️ Anterior")
+      .setStyle(ButtonStyle.Primary)
+      .setDisabled(currentPage === 0);
+
+    const next = new ButtonBuilder()
+      .setCustomId("next")
+      .setLabel("Próximo ▶️")
+      .setStyle(ButtonStyle.Primary)
+      .setDisabled(currentPage >= totalPages - 1);
+
+    const last = new ButtonBuilder()
+      .setCustomId("last")
+      .setLabel("Último ⏭️")
+      .setStyle(ButtonStyle.Secondary)
+      .setDisabled(currentPage >= totalPages - 1);
+
+    return new ActionRowBuilder<ButtonBuilder>().addComponents(
+      first,
+      prev,
+      next,
+      last
+    );
   }
 
   private makeEmbed(
     interaction: ChatInputCommandInteraction,
     clan: Clan,
-    clanRank: number
+    clanRank: number,
+    currentPage: number,
+    totalPages: number
   ) {
     const kdRatio =
       clan.totalDeaths > 0
         ? (clan.totalKills / clan.totalDeaths).toFixed(2)
         : clan.totalKills.toFixed(2);
 
-    // Calcular tempo total online do clã
-    const totalTimeOnline = calculateTotalOnlineTime(clan.totalTimeOnline);
-
     // Ordenar membros por score (decrescente)
     const sortedMembers = [...clan.members].sort((a, b) => b.score - a.score);
 
-    // Limitar a quantidade de membros exibidos para evitar exceder o limite do Discord
-    const membersToShow = sortedMembers.slice(0, 10);
+    // Paginar membros
+    const start = currentPage * this.membersPerPage;
+    const membersToShow = sortedMembers.slice(
+      start,
+      start + this.membersPerPage
+    );
 
-    // Criar string formatada com os membros do clã
+    // Criar string formatada com os membros do clã (mais bonitinho)
     let membersString = "";
     for (const [index, member] of membersToShow.entries()) {
+      const position = start + index + 1;
       const lastPlayed = member.updatedAt
         ? new Date(member.updatedAt).toLocaleDateString("pt-BR")
         : "N/A";
 
-      membersString += `> **${index + 1}.** ${
+      const medal =
+        position === 1
+          ? "🥇"
+          : position === 2
+          ? "🥈"
+          : position === 3
+          ? "🥉"
+          : `#${position}`;
+
+      const kdRatio =
+        member.deaths > 0
+          ? (member.kills / member.deaths).toFixed(2)
+          : member.kills.toFixed(2);
+
+      // Layout mais compacto para respeitar o limite de 1024 caracteres
+      const memberLine = `${medal} **${
         member.name
-      } - **${member.score.toLocaleString("pt-BR")}** pontos\n`;
-      membersString += `> └── 📅 Último jogo: ${lastPlayed}\n`;
+      }**\n⭐ ${member.score.toLocaleString(
+        "pt-BR"
+      )} • 🎯 ${kdRatio} • 📅 ${lastPlayed}\n\n`;
+
+      // Verificar se adicionar este membro não excederia o limite
+      if (membersString.length + memberLine.length > 950) {
+        membersString += `\n*...mais ${
+          membersToShow.length - index
+        } membros na próxima página*`;
+        break;
+      }
+
+      membersString += memberLine;
     }
 
-    // Se houver mais membros que não couberam na lista
-    if (sortedMembers.length > 10) {
-      membersString += `> \n> *...e mais ${sortedMembers.length - 10} membros*`;
-    }
+    const totalTimeOnline = calculateTotalOnlineTime(clan.totalTimeOnline);
 
     const embed = new EmbedBuilder()
       .setColor(0x1abc9c)
@@ -119,7 +249,8 @@ export class GetClanInformationCommand implements Command {
           `🏆 **Ranking:** #${clanRank.toLocaleString(
             "pt-BR"
           )} com **${clan.points.toLocaleString("pt-BR")}** pontos\n` +
-          `⚡ **DICA PARA CLÃS:** Incentive seus membros a jogar entre 7h e 14h para ganhar o **DOBRO** de pontuação!`
+          `⚡ **DICA PARA CLÃS:** Incentive seus membros a jogar entre 7h e 14h para ganhar o **DOBRO** de pontuação!\n` +
+          `📄 Página ${currentPage + 1}/${totalPages}`
       )
       .addFields({
         name: "📈 Estatísticas do Clã",
@@ -135,14 +266,12 @@ export class GetClanInformationCommand implements Command {
           `> 🎯 **K/D Total:** ${clan.totalKills.toLocaleString(
             "pt-BR"
           )} / ${clan.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})\n` +
-          `> 🏆 **Posição no Ranking:** #${clanRank.toLocaleString("pt-BR")}`,
+          `> ⏱️ **Tempo Online:** ${totalTimeOnline}`,
         inline: false,
       })
       .addFields({
-        name: `👥 Membros do Clã (${clan.totalScore.toLocaleString(
-          "pt-BR"
-        )} pontos)`,
-        value: membersString || "> *Nenhum membro encontrado*",
+        name: `👥 Membros (${clan.totalScore.toLocaleString("pt-BR")} pts)`,
+        value: membersString || "*Nenhum membro encontrado*",
         inline: false,
       });
 
