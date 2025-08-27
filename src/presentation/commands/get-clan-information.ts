@@ -98,9 +98,14 @@ export class GetClanInformationCommand implements Command {
     // Criar string formatada com os membros do clã
     let membersString = "";
     for (const [index, member] of membersToShow.entries()) {
+      const lastPlayed = member.updatedAt
+        ? new Date(member.updatedAt).toLocaleDateString("pt-BR")
+        : "N/A";
+
       membersString += `> **${index + 1}.** ${
         member.name
       } - **${member.score.toLocaleString("pt-BR")}** pontos\n`;
+      membersString += `> └── 📅 Último jogo: ${lastPlayed}\n`;
     }
 
     // Se houver mais membros que não couberam na lista

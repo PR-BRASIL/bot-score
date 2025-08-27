@@ -46,6 +46,10 @@ export class GetUserInformationCommand implements Command {
         ? (userData.kills / userData.deaths).toFixed(2)
         : userData.kills.toFixed(2);
 
+    const lastPlayed = userData.updatedAt
+      ? new Date(userData.updatedAt).toLocaleDateString("pt-BR")
+      : "N/A";
+
     const embed = new EmbedBuilder()
       .setColor(0x1abc9c)
       .setAuthor({
@@ -84,6 +88,7 @@ export class GetUserInformationCommand implements Command {
           `> 🏆 **Posição no Ranking:** #${userData.rank.toLocaleString(
             "pt-BR"
           )}\n` +
+          `> 📅 **Último jogo:** ${lastPlayed}\n` +
           `> \n` +
           `> ${progress}`,
         inline: false,

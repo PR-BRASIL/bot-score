@@ -9,4 +9,5 @@ export interface User {
   score: number;
   totalTime: number;
   rounds: number;
+  updatedAt?: Date;
 }

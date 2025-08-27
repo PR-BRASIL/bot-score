@@ -13,6 +13,7 @@ export interface GetUserInformationOutput {
   rank: number;
   totalTime?: number;
   rounds: number;
+  updatedAt?: Date;
 }
 
 export interface GetUserInformation {

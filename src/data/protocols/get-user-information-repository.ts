@@ -11,6 +11,7 @@ export interface GetUserInformationRepositoryOutput {
   rank: number;
   totalTime?: number;
   rounds: number;
+  updatedAt?: Date;
 }
 
 export interface GetUserInformationRepository {

@@ -61,6 +61,17 @@ export class TopClansPodium {
         clan.totalDeaths > 0
           ? (clan.totalKills / clan.totalDeaths).toFixed(2)
           : clan.totalKills.toFixed(2);
+
+      // Find the most recent activity date from clan members
+      const mostRecentActivity = clan.members
+        .filter((member) => member.updatedAt)
+        .map((member) => new Date(member.updatedAt!))
+        .sort((a, b) => b.getTime() - a.getTime())[0];
+
+      const lastActivity = mostRecentActivity
+        ? mostRecentActivity.toLocaleDateString("pt-BR")
+        : "N/A";
+
       embed.addFields({
         name: `${position}º Lugar - ${clan.name}`,
         value: `> 👥 **Membros:** ${clan.memberCount.toLocaleString(
@@ -71,7 +82,9 @@ export class TopClansPodium {
           "pt-BR"
         )}\n> 🎯 **K/D Total:** ${clan.totalKills.toLocaleString(
           "pt-BR"
-        )} / ${clan.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})`,
+        )} / ${clan.totalDeaths.toLocaleString(
+          "pt-BR"
+        )} (${kdRatio})\n> 📅 **Última atividade:** ${lastActivity}`,
         inline: false,
       });
     }
@@ -83,6 +96,16 @@ export class TopClansPodium {
         third.totalDeaths > 0
           ? (third.totalKills / third.totalDeaths).toFixed(2)
           : third.totalKills.toFixed(2);
+
+      const mostRecentActivity = third.members
+        .filter((member) => member.updatedAt)
+        .map((member) => new Date(member.updatedAt!))
+        .sort((a, b) => b.getTime() - a.getTime())[0];
+
+      const lastActivity = mostRecentActivity
+        ? mostRecentActivity.toLocaleDateString("pt-BR")
+        : "N/A";
+
       embed.addFields({
         name: `🥉 3º Lugar - ${third.name}`,
         value: `> 👥 **Membros:** ${third.memberCount.toLocaleString(
@@ -93,7 +116,9 @@ export class TopClansPodium {
           "pt-BR"
         )}\n> 🎯 **K/D Total:** ${third.totalKills.toLocaleString(
           "pt-BR"
-        )} / ${third.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})`,
+        )} / ${third.totalDeaths.toLocaleString(
+          "pt-BR"
+        )} (${kdRatio})\n> 📅 **Última atividade:** ${lastActivity}`,
         inline: false,
       });
     }
@@ -103,6 +128,16 @@ export class TopClansPodium {
         second.totalDeaths > 0
           ? (second.totalKills / second.totalDeaths).toFixed(2)
           : second.totalKills.toFixed(2);
+
+      const mostRecentActivity = second.members
+        .filter((member) => member.updatedAt)
+        .map((member) => new Date(member.updatedAt!))
+        .sort((a, b) => b.getTime() - a.getTime())[0];
+
+      const lastActivity = mostRecentActivity
+        ? mostRecentActivity.toLocaleDateString("pt-BR")
+        : "N/A";
+
       embed.addFields({
         name: `🥈 2º Lugar - ${second.name}`,
         value: `> 👥 **Membros:** ${second.memberCount.toLocaleString(
@@ -113,7 +148,9 @@ export class TopClansPodium {
           "pt-BR"
         )}\n> 🎯 **K/D Total:** ${second.totalKills.toLocaleString(
           "pt-BR"
-        )} / ${second.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})`,
+        )} / ${second.totalDeaths.toLocaleString(
+          "pt-BR"
+        )} (${kdRatio})\n> 📅 **Última atividade:** ${lastActivity}`,
         inline: false,
       });
     }
@@ -123,6 +160,16 @@ export class TopClansPodium {
         first.totalDeaths > 0
           ? (first.totalKills / first.totalDeaths).toFixed(2)
           : first.totalKills.toFixed(2);
+
+      const mostRecentActivity = first.members
+        .filter((member) => member.updatedAt)
+        .map((member) => new Date(member.updatedAt!))
+        .sort((a, b) => b.getTime() - a.getTime())[0];
+
+      const lastActivity = mostRecentActivity
+        ? mostRecentActivity.toLocaleDateString("pt-BR")
+        : "N/A";
+
       embed.addFields({
         name: `👑 1º Lugar - ${first.name}`,
         value: `> 👥 **Membros:** ${first.memberCount.toLocaleString(
@@ -133,7 +180,9 @@ export class TopClansPodium {
           "pt-BR"
         )}\n> 🎯 **K/D Total:** ${first.totalKills.toLocaleString(
           "pt-BR"
-        )} / ${first.totalDeaths.toLocaleString("pt-BR")} (${kdRatio})`,
+        )} / ${first.totalDeaths.toLocaleString(
+          "pt-BR"
+        )} (${kdRatio})\n> 📅 **Última atividade:** ${lastActivity}`,
         inline: false,
       });
     }
