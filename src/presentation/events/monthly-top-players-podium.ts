@@ -6,7 +6,14 @@ import type { User } from "../../domain/models/user";
 export class MonthlyTopPlayersPodium {
   private messageId: string | null = null;
 
-  public async updatePodium(client: Client): Promise<void> {
+  public resetMessageId(): void {
+    this.messageId = null;
+  }
+
+  public async updatePodium(
+    client: Client,
+    forceNewMessage: boolean = false
+  ): Promise<void> {
     let channel =
       (client.channels.cache.get(env.monthlyTopPlayersChannelId as string) as
         | TextChannel
@@ -24,12 +31,14 @@ export class MonthlyTopPlayersPodium {
     if (!channel) return;
 
     let message;
-    if (this.messageId) {
+    if (!forceNewMessage && this.messageId) {
       try {
         message = await channel.messages.fetch(this.messageId);
       } catch {
         this.messageId = null;
       }
+    } else if (forceNewMessage) {
+      this.messageId = null;
     }
 
     const collection = await mongoHelper.getCollection("monthly_user");
@@ -148,11 +157,15 @@ export class MonthlyTopPlayersPodium {
       iconURL: channel.guild.iconURL() || undefined,
     });
 
-    if (message) {
+    if (!forceNewMessage && message) {
       await message.edit({ embeds: [embed] });
       return;
     }
     const newMessage = await channel.send({ embeds: [embed] });
-    this.messageId = newMessage.id;
+    // Só atualiza messageId se não for uma mensagem forçada (histórico)
+    // Assim, a mensagem ativa continua sendo editada normalmente
+    if (!forceNewMessage) {
+      this.messageId = newMessage.id;
+    }
   }
 }

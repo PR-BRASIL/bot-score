@@ -34,15 +34,18 @@ export function scheduleMonthlyTopPlayers(client: Client): void {
   const monthly = new MonthlyTopPlayersPodium();
 
   // Atualiza o pódio mensal a cada 10 minutos */10 * * * *
-  cron.schedule("*/10 * * * * *", async () => {
+  cron.schedule("*/10 * * * *", async () => {
     console.log("Updating monthly top players podium...");
     await monthly.updatePodium(client);
   });
 
-  // Reset mensal: 00:00 do dia 1 de cada mês
-  cron.schedule("0 0 1 * *", async () => {
+  // Reset mensal: 06:00 do dia 1 de cada mês
+  cron.schedule("0 6 1 * *", async () => {
     console.log("Monthly season reset: preparing season end announcement...");
-    const seasonLabel = new Date().toLocaleDateString("pt-BR", {
+    // Pega o mês anterior, já que o reset acontece no início do novo mês
+    const lastMonth = new Date();
+    lastMonth.setMonth(lastMonth.getMonth() - 1);
+    const seasonLabel = lastMonth.toLocaleDateString("pt-BR", {
       month: "long",
       year: "numeric",
     });
@@ -126,5 +129,9 @@ export function scheduleMonthlyTopPlayers(client: Client): void {
     } catch (err) {
       console.error("Failed to clear monthly_user collection", err);
     }
+
+    // Reseta o messageId da instância ativa para que a próxima atualização crie uma nova mensagem
+    monthly.resetMessageId();
+    console.log("Monthly season reset completed. New season starts now!");
   });
 }
