@@ -5,6 +5,7 @@ import { env } from "./config/env";
 import {
   scheduleTopPlayersPodium,
   scheduleTopClansPodium,
+  scheduleMonthlyTopPlayers,
 } from "./config/scheduler";
 import { setupOneTimeEvents } from "./config/onetime-events";
 
@@ -16,6 +17,7 @@ client.on("ready", async () => {
     .then(() => {
       scheduleTopPlayersPodium(client);
       scheduleTopClansPodium(client);
+      scheduleMonthlyTopPlayers(client);
       setupOneTimeEvents(client);
       logger.info("mongoDB started");
     })

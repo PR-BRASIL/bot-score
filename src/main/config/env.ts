@@ -13,4 +13,6 @@ export const env = {
   topPlayersPodiumChannelId: process.env.TOP_PLAYERS_PODIUM_CHANNEL_ID,
   topClansPodiumChannelId: process.env.TOP_CLANS_PODIUM_CHANNEL_ID,
   patentsInfoChannelId: process.env.PATENTS_INFO_CHANNEL_ID,
+  monthlyTopPlayersChannelId: process.env.MONTHLY_TOP_PLAYERS_CHANNEL_ID,
+  monthlySeasonEndChannelId: process.env.MONTHLY_SEASON_END_CHANNEL_ID,
 };
