@@ -138,10 +138,10 @@ export class MonthlyTopPlayersPodium {
         inline: false,
       });
 
-      // Demais posições (25º ao 4º)
-      const restPlayers = topPlayers.slice(0, -3);
+      // Demais posições (4º ao 20º)
+      const restPlayers = topPlayers.slice(0, -3).reverse();
       for (const [index, player] of restPlayers.entries()) {
-        const position = topPlayers.length - index;
+        const position = 4 + index;
         embed.addFields({
           name: `• ${position}º — ${player.name}`,
           value: `> ⭐ **Pontos:** ${Number(player.score || 0).toLocaleString(
