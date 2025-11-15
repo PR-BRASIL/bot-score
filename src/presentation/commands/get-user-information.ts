@@ -1,4 +1,8 @@
-import { EmbedBuilder, type ChatInputCommandInteraction } from "discord.js";
+import {
+  EmbedBuilder,
+  type ChatInputCommandInteraction,
+  type GuildMember,
+} from "discord.js";
 import type { Command } from "../protocols/command";
 import type {
   GetUserInformation,
@@ -38,6 +42,16 @@ export class GetUserInformationCommand implements Command {
     interaction: ChatInputCommandInteraction,
     userData: GetUserInformationOutput
   ) {
+    const allowedRoleIds = new Set([
+      "1149794247634079775",
+      "1149794265346621640",
+      "1149794262091829329",
+      "1149794269675139174",
+    ]);
+    const member = interaction.member as GuildMember | null;
+    const hasAllowedRole = !!member?.roles?.cache?.some((role) =>
+      allowedRoleIds.has(role.id)
+    );
     const userPatent = await getPatent(userData.score);
     const patent = userPatent.split(" <");
     const progress = await new GetPatentProgress().get(userData.score);
@@ -93,6 +107,14 @@ export class GetUserInformationCommand implements Command {
           `> ${progress}`,
         inline: false,
       });
+
+    if (hasAllowedRole) {
+      embed.addFields({
+        name: "🔐 Hash do Jogador",
+        value: `> \n> ${userData.hash}\n> ㅤ`,
+        inline: false,
+      });
+    }
 
     embed.setFooter({
       text: `Reality Brasil ・ Atualizado em ${new Date().toLocaleDateString(
