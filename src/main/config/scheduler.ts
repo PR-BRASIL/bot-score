@@ -41,15 +41,30 @@ export function scheduleMonthlyTopPlayers(client: Client): void {
 
   // Reset mensal: 00:00 do dia 1 de cada mês
   cron.schedule("0 0 1 * *", async () => {
-    console.log("Monthly season reset: dropping monthly_user collection...");
+    console.log("Monthly season reset: preparing season end announcement...");
+    const seasonLabel = new Date().toLocaleDateString("pt-BR", {
+      month: "long",
+      year: "numeric",
+    });
+
+    // Busca Top 3 antes de limpar a coleção
+    let top3: Array<{ name: string; score: number }> = [];
     try {
       const collection = await mongoHelper.getCollection("monthly_user");
-      await collection.deleteMany({});
+      const docs = await collection
+        .find({})
+        .sort({ score: -1 })
+        .limit(3)
+        .toArray();
+      top3 = docs.map((d: any) => ({
+        name: d.name,
+        score: Number(d.score || 0),
+      }));
     } catch (err) {
-      console.error("Failed to clear monthly_user collection", err);
+      console.error("Failed to read monthly_user for podium", err);
     }
 
-    // Envia anúncio do fim da temporada
+    // Envia anúncio do fim da temporada com Top 3
     const channel = client.channels.cache.get(
       env.monthlySeasonEndChannelId as string
     ) as TextChannel | undefined;
@@ -60,13 +75,56 @@ export function scheduleMonthlyTopPlayers(client: Client): void {
           name: "Reality Brasil",
           iconURL: channel.guild.iconURL() || undefined,
         })
-        .setTitle("🏁 Fim da Temporada Mensal")
+        .setTitle(`🏁 Fim da Temporada Mensal — ${seasonLabel}`)
         .setDescription(
           "A temporada mensal foi encerrada e as pontuações foram resetadas.\n" +
-            "Boa sorte a todos na nova temporada!"
+            "Parabéns aos campeões! A nova temporada já começou — boa sorte!"
+        )
+        .setImage(
+          "https://media.discordapp.net/attachments/1162222580644708372/1274439425354371072/Capa_GitBook.png?ex=67df05b4&is=67ddb434&hm=e7f9eb86c1d74c0e1de0414f3dab11023f0820ea8431edfe0812e5afe80de930&=&format=webp&quality=lossless"
         )
         .setTimestamp();
+
+      if (top3.length > 0) {
+        const [first, second, third] = top3;
+        if (first) {
+          embed.addFields({
+            name: `<a:first:1353055748262989867> 1º — ${first.name}`,
+            value: `> ⭐ **Pontos:** ${first.score.toLocaleString(
+              "pt-BR"
+            )}\n> ㅤ`,
+            inline: true,
+          });
+        }
+        if (second) {
+          embed.addFields({
+            name: `🥈 2º — ${second.name}`,
+            value: `> ⭐ **Pontos:** ${second.score.toLocaleString(
+              "pt-BR"
+            )}\n> ㅤ`,
+            inline: true,
+          });
+        }
+        if (third) {
+          embed.addFields({
+            name: `🥉 3º — ${third.name}`,
+            value: `> ⭐ **Pontos:** ${third.score.toLocaleString(
+              "pt-BR"
+            )}\n> ㅤ`,
+            inline: true,
+          });
+        }
+      }
+
       await channel.send({ embeds: [embed] });
+    }
+
+    console.log("Monthly season reset: clearing monthly_user collection...");
+    try {
+      const collection = await mongoHelper.getCollection("monthly_user");
+      await collection.deleteMany({});
+    } catch (err) {
+      console.error("Failed to clear monthly_user collection", err);
     }
   });
 }
