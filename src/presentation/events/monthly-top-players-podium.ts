@@ -45,7 +45,7 @@ export class MonthlyTopPlayersPodium {
     const topPlayers = await collection
       .find<User>({})
       .sort({ score: -1 })
-      .limit(25)
+      .limit(20)
       .toArray();
     const seasonLabel = new Date().toLocaleDateString("pt-BR", {
       month: "long",
@@ -64,7 +64,7 @@ export class MonthlyTopPlayersPodium {
         name: "Reality Brasil",
         iconURL: channel.guild.iconURL() || undefined,
       })
-      .setTitle(`🏅 Top 25 Mensal — ${seasonLabel}`)
+      .setTitle(`🏅 Top 20 Mensal — ${seasonLabel}`)
       .setThumbnail(channel.guild.iconURL() || null)
       .setImage(
         "https://media.discordapp.net/attachments/1162222580644708372/1274439425354371072/Capa_GitBook.png?ex=67df05b4&is=67ddb434&hm=e7f9eb86c1d74c0e1de0414f3dab11023f0820ea8431edfe0812e5afe80de930&=&format=webp&quality=lossless"
