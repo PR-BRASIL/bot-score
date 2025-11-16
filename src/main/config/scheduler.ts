@@ -11,7 +11,6 @@ import { TextChannel, EmbedBuilder } from "discord.js";
 export function scheduleTopPlayersPodium(client: Client): void {
   const getUserInformation = new MongoGetUserInformationRepository();
   const podium = new TopPlayersPodium(getUserInformation);
-
   // every 10 minutes
   cron.schedule("*/10 * * * *", async () => {
     console.log("Updating top players podium...");
