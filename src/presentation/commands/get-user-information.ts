@@ -10,6 +10,8 @@ import type {
 } from "../../domain/usecase/get-user-information";
 import { getPatent } from "../../utils/patents";
 import { GetPatentProgress } from "../../utils/getPatentProgress";
+import { mongoHelper } from "../../infra/db/mongodb/helpers/mongo-helper";
+import type { User } from "../../domain/models/user";
 
 export class GetUserInformationCommand implements Command {
   public constructor(
@@ -64,6 +66,40 @@ export class GetUserInformationCommand implements Command {
       ? new Date(userData.updatedAt).toLocaleDateString("pt-BR")
       : "N/A";
 
+    // Ranking mensal (se o jogador estiver na coleção mensal)
+    let monthlyRankingLine = "";
+    try {
+      const monthlyCollection = await mongoHelper.getCollection("monthly_user");
+      const monthlyUser = await monthlyCollection.findOne<User>({
+        hash: userData.hash,
+      });
+
+      if (monthlyUser) {
+        const monthlyPlayers = await monthlyCollection
+          .find<User>({})
+          .sort({ score: -1 })
+          .toArray();
+
+        const monthlyRank =
+          monthlyPlayers.findIndex(
+            (player) => player.hash === monthlyUser.hash
+          ) + 1;
+
+        if (monthlyRank > 0) {
+          monthlyRankingLine =
+            `> \n` +
+            `> 🏅 **Ranking Mensal:** #${monthlyRank.toLocaleString(
+              "pt-BR"
+            )} com **${Number(monthlyUser.score || 0).toLocaleString(
+              "pt-BR"
+            )}** pontos\n` +
+            `> ㅤ`;
+        }
+      }
+    } catch {
+      // Se der erro ao buscar ranking mensal, apenas não mostra essa informação
+    }
+
     const embed = new EmbedBuilder()
       .setColor(0x1abc9c)
       .setAuthor({
@@ -84,29 +120,38 @@ export class GetUserInformationCommand implements Command {
         name: "📊 Patente Atual",
         value: `> \n> **<${patent[1] || ""} ${patent[0]}**\n> ㅤ`,
         inline: false,
-      })
-      .addFields({
-        name: "📈 Estatísticas",
-        value:
-          `> \n` +
-          `> ⭐ **Score:** ${userData.score.toLocaleString("pt-BR")} pontos\n` +
-          `> 🎮 **Partidas:** ${(userData.rounds || 0).toLocaleString(
-            "pt-BR"
-          )}\n` +
-          `> 🤝 **Teamwork:** ${userData.teamWorkScore.toLocaleString(
-            "pt-BR"
-          )}\n` +
-          `> 🎯 **K/D:** ${userData.kills.toLocaleString(
-            "pt-BR"
-          )} / ${userData.deaths.toLocaleString("pt-BR")} (${kdRatio})\n` +
-          `> 🏆 **Posição no Ranking:** #${userData.rank.toLocaleString(
-            "pt-BR"
-          )}\n` +
-          `> 📅 **Último jogo:** ${lastPlayed}\n` +
-          `> \n` +
-          `> ${progress}`,
+      });
+
+    if (monthlyRankingLine) {
+      embed.addFields({
+        name: "📅 Temporada Mensal",
+        value: monthlyRankingLine,
         inline: false,
       });
+    }
+
+    embed.addFields({
+      name: "📈 Estatísticas",
+      value:
+        `> \n` +
+        `> ⭐ **Score:** ${userData.score.toLocaleString("pt-BR")} pontos\n` +
+        `> 🎮 **Partidas:** ${(userData.rounds || 0).toLocaleString(
+          "pt-BR"
+        )}\n` +
+        `> 🤝 **Teamwork:** ${userData.teamWorkScore.toLocaleString(
+          "pt-BR"
+        )}\n` +
+        `> 🎯 **K/D:** ${userData.kills.toLocaleString(
+          "pt-BR"
+        )} / ${userData.deaths.toLocaleString("pt-BR")} (${kdRatio})\n` +
+        `> 🏆 **Posição no Ranking:** #${userData.rank.toLocaleString(
+          "pt-BR"
+        )}\n` +
+        `> 📅 **Último jogo:** ${lastPlayed}\n` +
+        `> \n` +
+        `> ${progress}`,
+      inline: false,
+    });
 
     if (hasAllowedRole) {
       embed.addFields({
