@@ -98,7 +98,7 @@ export class MonthlyTopPlayersPodium {
         "Ranking mensal com pontuação.\n" +
           "Use este ranking para acompanhar a temporada vigente.\n" +
           "⚡ Dica: jogue entre 7h e 14h para pontuar mais!\n" +
-          "🔎 Dica: use `/stats` para ver detalhes de um jogador."
+          "🔎 Dica: use `/season` para ver todos os jogadores."
       );
 
       // Top 3 com destaque (primeiro, segundo e terceiro)
