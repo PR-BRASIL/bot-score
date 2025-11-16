@@ -49,7 +49,7 @@ export class TopPlayersPodium {
           "⚡ **DICA:** Jogue entre 7h e 14h para ganhar o **DOBRO** de pontuação!\n" +
           "Utilize o comando `/stats` para ver as informações de um jogador específico.\n" +
           "Utilize o comando `/clastats` para ver as informações de um clã específico. \n" +
-          "Utilize o comando `/top` para ver sua posição, ou dos outros no ranking"
+          "Utilize o comando `/ranking` para ver sua posição, ou dos outros no ranking"
       )
       .setTimestamp()
       .setImage(
