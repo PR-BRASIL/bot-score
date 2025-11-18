@@ -218,6 +218,8 @@ export const registerDiscordLinkRoutes = (
             case "DISCORD_ALREADY_LINKED":
             case "PENDING_REQUEST_EXISTS":
               return res.status(409).json({ message: error.message });
+            case "REQUEST_EXPIRED":
+              return res.status(410).json({ message: error.message });
             default:
               return res.status(400).json({ message: error.message });
           }

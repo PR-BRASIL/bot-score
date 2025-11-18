@@ -18,6 +18,7 @@ interface DiscordLinkRequest {
   playerName: string;
   status: LinkStatus;
   createdAt: Date;
+  expiresAt: Date;
   resolvedAt?: Date;
   reason?: string;
 }
@@ -29,6 +30,7 @@ type LinkErrorType =
   | "PENDING_REQUEST_EXISTS"
   | "REQUEST_NOT_FOUND"
   | "REQUEST_ALREADY_HANDLED"
+  | "REQUEST_EXPIRED"
   | "NOT_AUTHORIZED";
 
 export class DiscordLinkError extends Error {
@@ -98,10 +100,12 @@ class DiscordLinkService {
       );
     }
 
+    const now = new Date();
     const pendingRequest = await linkCollection.findOne({
       discordUserId,
       playerName: player.name,
       status: "pending",
+      expiresAt: { $gt: now },
     });
 
     if (pendingRequest) {
@@ -111,12 +115,15 @@ class DiscordLinkService {
       );
     }
 
+    const expiresAt = new Date(now.getTime() + 15 * 60 * 1000); // 15 minutos
+
     const request: DiscordLinkRequest = {
       requestId: uid(24),
       discordUserId,
       playerName: player.name,
       status: "pending",
-      createdAt: new Date(),
+      createdAt: now,
+      expiresAt,
     };
 
     await linkCollection.insertOne(request);
@@ -153,6 +160,24 @@ class DiscordLinkService {
       throw new DiscordLinkError(
         "REQUEST_ALREADY_HANDLED",
         "Esta solicitação já foi processada."
+      );
+    }
+
+    const now = new Date();
+    if (request.expiresAt && request.expiresAt < now) {
+      await linkCollection.updateOne(
+        { requestId },
+        {
+          $set: {
+            status: "failed",
+            resolvedAt: now,
+            reason: "Solicitação expirada.",
+          },
+        }
+      );
+      throw new DiscordLinkError(
+        "REQUEST_EXPIRED",
+        "Esta solicitação expirou. Por favor, crie uma nova solicitação."
       );
     }
 
@@ -223,6 +248,24 @@ class DiscordLinkService {
       throw new DiscordLinkError(
         "REQUEST_ALREADY_HANDLED",
         "Esta solicitação já foi processada."
+      );
+    }
+
+    const now = new Date();
+    if (request.expiresAt && request.expiresAt < now) {
+      await linkCollection.updateOne(
+        { requestId },
+        {
+          $set: {
+            status: "failed",
+            resolvedAt: now,
+            reason: "Solicitação expirada.",
+          },
+        }
+      );
+      throw new DiscordLinkError(
+        "REQUEST_EXPIRED",
+        "Esta solicitação expirou. Por favor, crie uma nova solicitação."
       );
     }
 
