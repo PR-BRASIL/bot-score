@@ -9,7 +9,7 @@ export interface ClientWithCommands extends Client {
 }
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
 }) as ClientWithCommands;
 
 client.commands = new Collection();

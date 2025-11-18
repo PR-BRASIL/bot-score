@@ -1,5 +1,7 @@
+import type { ObjectId } from "mongodb";
+
 export interface User {
-  _id: string;
+  _id: string | ObjectId;
   name: string;
   ip: string;
   teamWorkScore: number;
@@ -10,4 +12,5 @@ export interface User {
   totalTime: number;
   rounds: number;
   updatedAt?: Date;
+  discordUserId?: string;
 }

@@ -8,6 +8,7 @@ import {
   scheduleMonthlyTopPlayers,
 } from "./config/scheduler";
 import { setupOneTimeEvents } from "./config/onetime-events";
+import { startHttpServer } from "./config/http-server";
 
 client.on("ready", async () => {
   let mongoConectionCheck = true;
@@ -30,5 +31,7 @@ client.on("ready", async () => {
 
   logger.info("bot online");
 });
+
+startHttpServer(client);
 
 client.login(env.token);

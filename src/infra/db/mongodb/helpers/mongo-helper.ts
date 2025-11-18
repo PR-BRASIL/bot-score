@@ -17,12 +17,12 @@ export const mongoHelper = {
     return;
   },
 
-  async getCollection(name: string): Promise<Collection> {
+  async getCollection<T = any>(name: string): Promise<Collection<T>> {
     try {
-      return this.client.db().collection(name);
+      return this.client.db().collection(name) as Collection<T>;
     } catch {
       await this.connect();
-      return this.client.db().collection(name);
+      return this.client.db().collection(name) as Collection<T>;
     }
   },
 
