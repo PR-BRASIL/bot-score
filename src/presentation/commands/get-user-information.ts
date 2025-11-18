@@ -130,26 +130,30 @@ export class GetUserInformationCommand implements Command {
       });
     }
 
+    const statsValue =
+      `> \n` +
+      `> ⭐ **Score:** ${userData.score.toLocaleString("pt-BR")} pontos\n` +
+      `> 🎮 **Partidas:** ${(userData.rounds || 0).toLocaleString(
+        "pt-BR"
+      )}\n` +
+      `> 🤝 **Teamwork:** ${userData.teamWorkScore.toLocaleString(
+        "pt-BR"
+      )}\n` +
+      `> 🎯 **K/D:** ${userData.kills.toLocaleString(
+        "pt-BR"
+      )} / ${userData.deaths.toLocaleString("pt-BR")} (${kdRatio})\n` +
+      `> 🏆 **Posição no Ranking:** #${userData.rank.toLocaleString(
+        "pt-BR"
+      )}\n` +
+      `> 📅 **Último jogo:** ${lastPlayed}\n`;
+
+    const discordMention = userData.discordUserId
+      ? `> 💬 **Discord:** <@${userData.discordUserId}>\n`
+      : "";
+
     embed.addFields({
       name: "📈 Estatísticas",
-      value:
-        `> \n` +
-        `> ⭐ **Score:** ${userData.score.toLocaleString("pt-BR")} pontos\n` +
-        `> 🎮 **Partidas:** ${(userData.rounds || 0).toLocaleString(
-          "pt-BR"
-        )}\n` +
-        `> 🤝 **Teamwork:** ${userData.teamWorkScore.toLocaleString(
-          "pt-BR"
-        )}\n` +
-        `> 🎯 **K/D:** ${userData.kills.toLocaleString(
-          "pt-BR"
-        )} / ${userData.deaths.toLocaleString("pt-BR")} (${kdRatio})\n` +
-        `> 🏆 **Posição no Ranking:** #${userData.rank.toLocaleString(
-          "pt-BR"
-        )}\n` +
-        `> 📅 **Último jogo:** ${lastPlayed}\n` +
-        `> \n` +
-        `> ${progress}`,
+      value: statsValue + discordMention + `> \n` + `> ${progress}`,
       inline: false,
     });
 

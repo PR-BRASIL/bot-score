@@ -15,6 +15,7 @@ export interface GetUserInformationOutput {
   rounds: number;
   hash: string;
   updatedAt?: Date;
+  discordUserId?: string;
 }
 
 export interface GetUserInformation {
