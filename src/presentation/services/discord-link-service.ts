@@ -2,6 +2,7 @@ import type { Collection, ObjectId } from "mongodb";
 import { uid } from "uid";
 import { mongoHelper } from "../../infra/db/mongodb/helpers/mongo-helper";
 import type { User } from "../../domain/models/user";
+import { extractPlayerName } from "../../utils/clanUtils";
 
 type LinkStatus =
   | "pending"
@@ -44,8 +45,10 @@ class DiscordLinkService {
   private readonly USER_COLLECTION = "user";
 
   public async createLinkRequest(discordUserId: string, rawPlayerName: string) {
-    const playerName = this.normalizePlayerName(rawPlayerName);
-    if (!discordUserId || !playerName) {
+    const normalizedInput = this.normalizePlayerName(rawPlayerName);
+    const playerNameWithoutClan = extractPlayerName(normalizedInput).trim();
+
+    if (!discordUserId || !playerNameWithoutClan) {
       throw new DiscordLinkError(
         "PLAYER_NOT_FOUND",
         "Usuário ou jogador inválido."
@@ -55,9 +58,17 @@ class DiscordLinkService {
     const usersCollection = await this.getUsersCollection();
     const linkCollection = await this.getLinkCollection();
 
+    // Busca pelo nome do jogador no final do campo name, ignorando o prefixo do clã
+    // Suporta formatos: "SPTS willian", " willian", "willian"
+    const escapedPlayerName = this.escapeRegExp(playerNameWithoutClan);
     const player = await usersCollection.findOne<User>(
       {
-        name: { $regex: new RegExp(`^${this.escapeRegExp(playerName)}$`, "i") },
+        $or: [
+          // Busca exata pelo nome (sem clã)
+          { name: { $regex: new RegExp(`^\\s*${escapedPlayerName}$`, "i") } },
+          // Busca pelo nome no final (com clã antes, separado por espaço)
+          { name: { $regex: new RegExp(`\\s+${escapedPlayerName}$`, "i") } },
+        ],
       },
       { projection: { name: 1, discordUserId: 1 } }
     );
