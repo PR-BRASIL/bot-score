@@ -21,11 +21,11 @@ export const registerFavoriteMapNotificationRoutes = (
   router.post(
     "/api/favorite-map/notify",
     async (req: Request, res: Response) => {
-      const { name, mode, layout, author } = req.body;
+      const { name, mode, author } = req.body;
 
-      if (!name || !mode || !layout) {
+      if (!name || !mode) {
         return res.status(400).json({
-          message: "Parâmetros obrigatórios: name, mode e layout",
+          message: "Parâmetros obrigatórios: name e mode",
         });
       }
 
@@ -46,7 +46,6 @@ export const registerFavoriteMapNotificationRoutes = (
               $elemMatch: {
                 name: name,
                 mode: mode,
-                layout: layout,
               },
             },
           })
@@ -67,11 +66,11 @@ export const registerFavoriteMapNotificationRoutes = (
           .setColor(0x1abc9c)
           .setTitle("🎮 Mapa Favorito em Jogo!")
           .setDescription(
-            `O mapa **${name}** (${mode} - ${layout}) foi setado para ser o proximo mapa!`
+            `O mapa **${name}** (${mode}) foi setado para ser o proximo mapa!`
           )
           .addFields({
             name: "📋 Detalhes",
-            value: `**Mapa:** ${name}\n**Modo:** ${mode}\n**Layout:** ${layout}`,
+            value: `**Mapa:** ${name}\n**Modo:** ${mode}`,
             inline: false,
           })
           .setFooter({
