@@ -1,9 +1,14 @@
-import type { ChatInputCommandInteraction } from "discord.js";
+import type {
+  AutocompleteInteraction,
+  ChatInputCommandInteraction,
+} from "discord.js";
 import { SlashCommandBuilder } from "discord.js";
 import { makeGetUserInformationCommand } from "../factories/get-user-information";
 import { makeGetClanInformationCommand } from "../factories/get-clan-information";
 import { makeTopPlayersCommand } from "../factories/top-players";
 import { makeSeasonTopPlayersCommand } from "../factories/season-top-players";
+import { makeManageFavoriteMapsCommand } from "../factories/manage-favorite-maps";
+import { ManageFavoriteMapsCommand } from "../../presentation/commands/manage-favorite-maps";
 
 export const slashCommands = [
   {
@@ -76,6 +81,48 @@ export const slashCommands = [
       ),
     execute: async (interaction: ChatInputCommandInteraction) => {
       await makeSeasonTopPlayersCommand().execute(interaction);
+    },
+  },
+  {
+    data: new SlashCommandBuilder()
+      .setName("favoritos")
+      .setDescription("Gerencia seus mapas favoritos")
+      .addStringOption((option) =>
+        option
+          .setName("acao")
+          .setDescription("Ação a realizar")
+          .setRequired(true)
+          .addChoices(
+            { name: "Adicionar", value: "adicionar" },
+            { name: "Remover", value: "remover" }
+          )
+      )
+      .addStringOption((option) =>
+        option
+          .setName("mapa")
+          .setDescription("Nome do mapa")
+          .setRequired(true)
+          .setAutocomplete(true)
+      )
+      .addStringOption((option) =>
+        option
+          .setName("modo")
+          .setDescription("Modo de jogo")
+          .setRequired(true)
+          .setAutocomplete(true)
+      )
+      .addStringOption((option) =>
+        option
+          .setName("layout")
+          .setDescription("Layout do mapa")
+          .setRequired(true)
+          .setAutocomplete(true)
+      ),
+    execute: async (interaction: ChatInputCommandInteraction) => {
+      await makeManageFavoriteMapsCommand().execute(interaction);
+    },
+    autocomplete: async (interaction: AutocompleteInteraction) => {
+      await ManageFavoriteMapsCommand.handleAutocomplete(interaction);
     },
   },
 ];

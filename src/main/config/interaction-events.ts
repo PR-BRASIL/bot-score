@@ -1,4 +1,5 @@
 import type {
+  AutocompleteInteraction,
   ButtonInteraction,
   ChatInputCommandInteraction,
   Interaction,
@@ -12,6 +13,19 @@ export const makeInteractionEvents = (client: ClientWithCommands) => {
   client.on(Events.InteractionCreate, async (interaction: Interaction) => {
     if (interaction.isButton()) {
       await handleDiscordLinkButton(interaction as ButtonInteraction);
+      return;
+    }
+
+    if (interaction.isAutocomplete()) {
+      const autocompleteInteraction = interaction as AutocompleteInteraction;
+      const command = client.commands.get(autocompleteInteraction.commandName);
+      if (command && command.autocomplete) {
+        try {
+          await command.autocomplete(autocompleteInteraction);
+        } catch (error) {
+          logger.error("Erro ao processar autocomplete:", error);
+        }
+      }
       return;
     }
 
