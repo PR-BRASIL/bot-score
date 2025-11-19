@@ -3,6 +3,7 @@ import type { ClientWithCommands } from "./app";
 import { env } from "./env";
 import { logger } from "../../utils/logger";
 import { registerDiscordLinkRoutes } from "../routes/discord-link-routes";
+import { registerFavoriteMapNotificationRoutes } from "../routes/favorite-map-notification-routes";
 
 let serverStarted = false;
 
@@ -13,6 +14,7 @@ export const startHttpServer = (client: ClientWithCommands): void => {
   app.use(express.json());
 
   registerDiscordLinkRoutes(app, client);
+  registerFavoriteMapNotificationRoutes(app, client);
 
   app.listen(env.port, () => {
     serverStarted = true;
