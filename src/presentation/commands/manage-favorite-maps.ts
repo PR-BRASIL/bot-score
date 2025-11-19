@@ -140,9 +140,16 @@ export class ManageFavoriteMapsCommand implements Command {
     const user = await userCollection.findOne({ discordUserId: discordId });
 
     if (!user) {
+      const discordUser = interaction.user;
       await interaction.editReply({
         content:
-          "❌ Usuário não encontrado! Você precisa estar vinculado ao sistema.",
+          `❌ **Usuário não encontrado!**\n\n` +
+          `Para usar esta funcionalidade, você precisa vincular sua conta do Discord ao jogo.\n\n` +
+          `**Como vincular:**\n` +
+          `1. Entre no jogo Project Reality\n` +
+          `2. Execute o comando no chat do jogo no servidor **Reality Brasil**:\n` +
+          `   \`!link-discord ${discordUser.username}\`\n\n` +
+          `Após vincular, você terá acesso a todas as funcionalidades de favoritos! 🎮`,
       });
       return;
     }
