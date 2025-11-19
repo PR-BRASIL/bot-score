@@ -9,6 +9,8 @@ import { makeTopPlayersCommand } from "../factories/top-players";
 import { makeSeasonTopPlayersCommand } from "../factories/season-top-players";
 import { makeManageFavoriteMapsCommand } from "../factories/manage-favorite-maps";
 import { ManageFavoriteMapsCommand } from "../../presentation/commands/manage-favorite-maps";
+import { makeRemoveFavoriteMapCommand } from "../factories/remove-favorite-map";
+import { RemoveFavoriteMapCommand } from "../../presentation/commands/remove-favorite-map";
 
 export const slashCommands = [
   {
@@ -86,17 +88,7 @@ export const slashCommands = [
   {
     data: new SlashCommandBuilder()
       .setName("favoritos")
-      .setDescription("Gerencia seus mapas favoritos")
-      .addStringOption((option) =>
-        option
-          .setName("acao")
-          .setDescription("Ação a realizar")
-          .setRequired(true)
-          .addChoices(
-            { name: "Adicionar", value: "adicionar" },
-            { name: "Remover", value: "remover" }
-          )
-      )
+      .setDescription("Adiciona um mapa aos favoritos")
       .addStringOption((option) =>
         option
           .setName("mapa")
@@ -123,6 +115,24 @@ export const slashCommands = [
     },
     autocomplete: async (interaction: AutocompleteInteraction) => {
       await ManageFavoriteMapsCommand.handleAutocomplete(interaction);
+    },
+  },
+  {
+    data: new SlashCommandBuilder()
+      .setName("remover-favorito")
+      .setDescription("Remove um mapa dos favoritos")
+      .addStringOption((option) =>
+        option
+          .setName("mapa")
+          .setDescription("Mapa a remover (formato: Mapa - Modo - Layout)")
+          .setRequired(true)
+          .setAutocomplete(true)
+      ),
+    execute: async (interaction: ChatInputCommandInteraction) => {
+      await makeRemoveFavoriteMapCommand().execute(interaction);
+    },
+    autocomplete: async (interaction: AutocompleteInteraction) => {
+      await RemoveFavoriteMapCommand.handleAutocomplete(interaction);
     },
   },
 ];

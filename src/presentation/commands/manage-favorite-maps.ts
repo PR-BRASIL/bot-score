@@ -102,7 +102,6 @@ export class ManageFavoriteMapsCommand implements Command {
     await interaction.deferReply({ ephemeral: true });
 
     const discordId = interaction.user.id;
-    const action = interaction.options.getString("acao", true);
     const mapName = interaction.options.getString("mapa", true);
     const mode = interaction.options.getString(
       "modo",
@@ -154,89 +153,45 @@ export class ManageFavoriteMapsCommand implements Command {
       layout,
     };
 
-    if (action === "adicionar") {
-      const favoriteMaps = user.favoriteMaps || [];
+    const favoriteMaps = user.favoriteMaps || [];
 
-      // Verificar se já existe
-      const exists = favoriteMaps.some(
-        (map) =>
-          map.name === favoriteMap.name &&
-          map.mode === favoriteMap.mode &&
-          map.layout === favoriteMap.layout
-      );
+    // Verificar se já existe
+    const exists = favoriteMaps.some(
+      (map) =>
+        map.name === favoriteMap.name &&
+        map.mode === favoriteMap.mode &&
+        map.layout === favoriteMap.layout
+    );
 
-      if (exists) {
-        await interaction.editReply({
-          content: "❌ Este mapa já está na sua lista de favoritos!",
-        });
-        return;
-      }
-
-      favoriteMaps.push(favoriteMap);
-      await userCollection.updateOne(
-        { discordUserId: discordId },
-        { $set: { favoriteMaps } }
-      );
-
+    if (exists) {
       await interaction.editReply({
-        content: `✅ Mapa **${mapName}** (${mode} - ${layout}) adicionado aos favoritos!`,
+        content: "❌ Este mapa já está na sua lista de favoritos!",
       });
-    } else if (action === "remover") {
-      const favoriteMaps = user.favoriteMaps || [];
-
-      const index = favoriteMaps.findIndex(
-        (map) =>
-          map.name === favoriteMap.name &&
-          map.mode === favoriteMap.mode &&
-          map.layout === favoriteMap.layout
-      );
-
-      if (index === -1) {
-        await interaction.editReply({
-          content: "❌ Este mapa não está na sua lista de favoritos!",
-        });
-        return;
-      }
-
-      favoriteMaps.splice(index, 1);
-      await userCollection.updateOne(
-        { discordUserId: discordId },
-        { $set: { favoriteMaps } }
-      );
-
-      await interaction.editReply({
-        content: `✅ Mapa **${mapName}** (${mode} - ${layout}) removido dos favoritos!`,
-      });
+      return;
     }
+
+    favoriteMaps.push(favoriteMap);
+    await userCollection.updateOne(
+      { discordUserId: discordId },
+      { $set: { favoriteMaps } }
+    );
+
+    await interaction.editReply({
+      content: `✅ Mapa **${mapName}** (${mode} - ${layout}) adicionado aos favoritos!`,
+    });
   }
 
   public static async handleAutocomplete(
     interaction: AutocompleteInteraction
   ): Promise<void> {
     const focusedOption = interaction.options.getFocused(true);
-    const discordId = interaction.user.id;
-    const action = interaction.options.getString("acao");
 
     if (focusedOption.name === "mapa") {
-      const userCollection = await mongoHelper.getCollection<User>("user");
-      const user = await userCollection.findOne({ discordUserId: discordId });
-
-      const favoriteMaps = user?.favoriteMaps || [];
-      const addedMapNames = new Set(favoriteMaps.map((map) => map.name));
-
-      let availableMaps: string[];
-
-      if (action === "remover") {
-        // Para remover, mostrar apenas os mapas já adicionados
-        availableMaps = Array.from(addedMapNames);
-      } else {
-        // Para adicionar, filtrar mapas já adicionados
-        availableMaps = AVAILABLE_MAPS.filter((map) => !addedMapNames.has(map));
-      }
-
+      // Mostrar todos os mapas disponíveis
       const searchValue = focusedOption.value.toLowerCase();
-      const filtered = availableMaps
-        .filter((map) => map.toLowerCase().includes(searchValue))
+      const filtered = AVAILABLE_MAPS.filter((map) =>
+        map.toLowerCase().includes(searchValue)
+      )
         .slice(0, 25)
         .map((map) => ({
           name: map,
