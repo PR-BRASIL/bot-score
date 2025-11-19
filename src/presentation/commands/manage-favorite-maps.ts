@@ -1,6 +1,7 @@
 import {
   type ChatInputCommandInteraction,
   type AutocompleteInteraction,
+  EmbedBuilder,
 } from "discord.js";
 import type { Command } from "../protocols/command";
 import { mongoHelper } from "../../infra/db/mongodb/helpers/mongo-helper";
@@ -141,15 +142,36 @@ export class ManageFavoriteMapsCommand implements Command {
 
     if (!user) {
       const discordUser = interaction.user;
+      const embed = new EmbedBuilder()
+        .setColor(0xe74c3c)
+        .setTitle("❌ Conta não vinculada")
+        .setDescription(
+          "Para usar esta funcionalidade, você precisa vincular sua conta do Discord ao jogo."
+        )
+        .addFields({
+          name: "📋 Como vincular sua conta",
+          value:
+            `1️⃣ Entre no servidor **Reality Brasil** no Project Reality\n` +
+            `2️⃣ No chat do jogo, execute o comando:\n` +
+            `   \`\`\`!link-discord ${discordUser.username}\`\`\`\n` +
+            `3️⃣ Aguarde a confirmação de vinculação\n` +
+            `4️⃣ Volte para o Discord e confirme a vinculação`,
+          inline: false,
+        })
+        .addFields({
+          name: "✨ Após vincular",
+          value:
+            "Você terá acesso a todas as funcionalidades de favoritos e poderá gerenciar seus mapas preferidos! 🎮",
+          inline: false,
+        })
+        .setFooter({
+          text: "Reality Brasil • Sistema de Favoritos",
+          iconURL: interaction.guild?.iconURL() || undefined,
+        })
+        .setTimestamp();
+
       await interaction.editReply({
-        content:
-          `❌ **Usuário não encontrado!**\n\n` +
-          `Para usar esta funcionalidade, você precisa vincular sua conta do Discord ao jogo.\n\n` +
-          `**Como vincular:**\n` +
-          `1. Entre no jogo Project Reality\n` +
-          `2. Execute o comando no chat do jogo no servidor **Reality Brasil**:\n` +
-          `   \`!link-discord ${discordUser.username}\`\n\n` +
-          `Após vincular, você terá acesso a todas as funcionalidades de favoritos! 🎮`,
+        embeds: [embed],
       });
       return;
     }
