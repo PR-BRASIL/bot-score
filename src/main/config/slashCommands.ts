@@ -102,13 +102,6 @@ export const slashCommands = [
           .setDescription("Modo de jogo")
           .setRequired(true)
           .setAutocomplete(true)
-      )
-      .addStringOption((option) =>
-        option
-          .setName("layout")
-          .setDescription("Layout do mapa")
-          .setRequired(true)
-          .setAutocomplete(true)
       ),
     execute: async (interaction: ChatInputCommandInteraction) => {
       await makeManageFavoriteMapsCommand().execute(interaction);
@@ -124,7 +117,7 @@ export const slashCommands = [
       .addStringOption((option) =>
         option
           .setName("mapa")
-          .setDescription("Mapa a remover (formato: Mapa - Modo - Layout)")
+          .setDescription("Mapa a remover (formato: Mapa - Modo)")
           .setRequired(true)
           .setAutocomplete(true)
       ),

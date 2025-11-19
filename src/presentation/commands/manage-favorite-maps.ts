@@ -94,7 +94,6 @@ const AVAILABLE_MAPS = [
 ];
 
 const MODES = ["AAS", "Insurgency", "Skirmish", "Gungame"] as const;
-const LAYOUTS = ["Inf", "Alt", "Std", "Lrg"] as const;
 
 export class ManageFavoriteMapsCommand implements Command {
   public async execute(
@@ -108,10 +107,6 @@ export class ManageFavoriteMapsCommand implements Command {
       "modo",
       true
     ) as FavoriteMap["mode"];
-    const layout = interaction.options.getString(
-      "layout",
-      true
-    ) as FavoriteMap["layout"];
 
     // Validar se o mapa existe na lista
     if (!AVAILABLE_MAPS.includes(mapName)) {
@@ -125,14 +120,6 @@ export class ManageFavoriteMapsCommand implements Command {
     if (!MODES.includes(mode)) {
       await interaction.editReply({
         content: "❌ Modo inválido! Por favor, escolha um modo válido.",
-      });
-      return;
-    }
-
-    // Validar layout
-    if (!LAYOUTS.includes(layout)) {
-      await interaction.editReply({
-        content: "❌ Layout inválido! Por favor, escolha um layout válido.",
       });
       return;
     }
@@ -179,17 +166,13 @@ export class ManageFavoriteMapsCommand implements Command {
     const favoriteMap: FavoriteMap = {
       name: mapName,
       mode,
-      layout,
     };
 
     const favoriteMaps = user.favoriteMaps || [];
 
     // Verificar se já existe
     const exists = favoriteMaps.some(
-      (map) =>
-        map.name === favoriteMap.name &&
-        map.mode === favoriteMap.mode &&
-        map.layout === favoriteMap.layout
+      (map) => map.name === favoriteMap.name && map.mode === favoriteMap.mode
     );
 
     if (exists) {
@@ -206,7 +189,7 @@ export class ManageFavoriteMapsCommand implements Command {
     );
 
     await interaction.editReply({
-      content: `✅ Mapa **${mapName}** (${mode} - ${layout}) adicionado aos favoritos!`,
+      content: `✅ Mapa **${mapName}** (${mode}) adicionado aos favoritos!`,
     });
   }
 
@@ -237,18 +220,6 @@ export class ManageFavoriteMapsCommand implements Command {
         .map((mode) => ({
           name: mode,
           value: mode,
-        }));
-
-      await interaction.respond(filtered);
-    } else if (focusedOption.name === "layout") {
-      const searchValue = focusedOption.value.toLowerCase();
-      const filtered = LAYOUTS.filter((layout) =>
-        layout.toLowerCase().includes(searchValue)
-      )
-        .slice(0, 25)
-        .map((layout) => ({
-          name: layout,
-          value: layout,
         }));
 
       await interaction.respond(filtered);

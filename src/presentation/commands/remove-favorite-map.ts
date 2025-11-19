@@ -16,16 +16,16 @@ export class RemoveFavoriteMapCommand implements Command {
     const discordId = interaction.user.id;
     const mapCombination = interaction.options.getString("mapa", true);
 
-    // Parsear a combinação "Mapa - Modo - Layout"
+    // Parsear a combinação "Mapa - Modo"
     const parts = mapCombination.split(" - ");
-    if (parts.length !== 3) {
+    if (parts.length !== 2) {
       await interaction.editReply({
-        content: "❌ Formato inválido! Use o formato: Mapa - Modo - Layout",
+        content: "❌ Formato inválido! Use o formato: Mapa - Modo",
       });
       return;
     }
 
-    const [mapName, mode, layout] = parts;
+    const [mapName, mode] = parts;
 
     const userCollection = await mongoHelper.getCollection<User>("user");
     const user = await userCollection.findOne({ discordUserId: discordId });
@@ -70,7 +70,7 @@ export class RemoveFavoriteMapCommand implements Command {
 
     const index = favoriteMaps.findIndex(
       (map) =>
-        map.name === mapName && map.mode === mode && map.layout === layout
+        map.name === mapName && map.mode === mode
     );
 
     if (index === -1) {
@@ -87,7 +87,7 @@ export class RemoveFavoriteMapCommand implements Command {
     );
 
     await interaction.editReply({
-      content: `✅ Mapa **${mapName}** (${mode} - ${layout}) removido dos favoritos!`,
+      content: `✅ Mapa **${mapName}** (${mode}) removido dos favoritos!`,
     });
   }
 
@@ -102,9 +102,9 @@ export class RemoveFavoriteMapCommand implements Command {
       const user = await userCollection.findOne({ discordUserId: discordId });
       const favoriteMaps = user?.favoriteMaps || [];
 
-      // Criar combinações no formato "Mapa - Modo - Layout"
+      // Criar combinações no formato "Mapa - Modo"
       const combinations = favoriteMaps.map(
-        (map) => `${map.name} - ${map.mode} - ${map.layout}`
+        (map) => `${map.name} - ${map.mode}`
       );
 
       const searchValue = focusedOption.value.toLowerCase();

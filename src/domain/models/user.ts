@@ -3,7 +3,6 @@ import type { ObjectId } from "mongodb";
 export interface FavoriteMap {
   name: string;
   mode: "AAS" | "Insurgency" | "Skirmish" | "Gungame";
-  layout: "Inf" | "Alt" | "Std" | "Lrg";
 }
 
 export interface User {
