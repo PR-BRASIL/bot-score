@@ -9,13 +9,13 @@ import { mongoHelper } from "../../infra/db/mongodb/helpers/mongo-helper";
 import { TextChannel, EmbedBuilder } from "discord.js";
 
 export function scheduleTopPlayersPodium(client: Client): void {
-  // const getUserInformation = new MongoGetUserInformationRepository();
-  // const podium = new TopPlayersPodium(getUserInformation);
-  // // every 10 minutes
-  // cron.schedule("*/10 * * * *", async () => {
-  //   console.log("Updating top players podium...");
-  //   await podium.updatePodium(client);
-  // });
+  const getUserInformation = new MongoGetUserInformationRepository();
+  const podium = new TopPlayersPodium(getUserInformation);
+  // every 10 minutes
+  cron.schedule("*/10 * * * *", async () => {
+    console.log("Updating top players podium...");
+    await podium.updatePodium(client);
+  });
 }
 
 export function scheduleTopClansPodium(client: Client): void {
@@ -23,20 +23,20 @@ export function scheduleTopClansPodium(client: Client): void {
   const podium = new TopClansPodium(getUserInformation);
 
   // every 10 minutes
-  // cron.schedule("*/10 * * * *", async () => {
-  //   console.log("Updating top clans podium...");
-  //   await podium.updatePodium(client);
-  // });
+  cron.schedule("*/10 * * * *", async () => {
+    console.log("Updating top clans podium...");
+    await podium.updatePodium(client);
+  });
 }
 
 export function scheduleMonthlyTopPlayers(client: Client): void {
   const monthly = new MonthlyTopPlayersPodium();
 
   // Atualiza o pódio mensal a cada 10 minutos */10 * * * *
-  // cron.schedule("*/10 * * * *", async () => {
-  //   console.log("Updating monthly top players podium...");
-  //   await monthly.updatePodium(client);
-  // });
+  cron.schedule("*/10 * * * *", async () => {
+    console.log("Updating monthly top players podium...");
+    await monthly.updatePodium(client);
+  });
 
   // Reset mensal: 06:00 do dia 1 de cada mês
   cron.schedule("0 6 1 * *", async () => {
