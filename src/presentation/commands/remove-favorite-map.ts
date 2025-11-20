@@ -17,15 +17,19 @@ export class RemoveFavoriteMapCommand implements Command {
     const mapCombination = interaction.options.getString("mapa", true);
 
     // Parsear a combinação "Mapa - Modo"
+    // O modo sempre será o último elemento após o split, pois os modos são fixos
     const parts = mapCombination.split(" - ");
-    if (parts.length !== 2) {
+    if (parts.length < 2) {
       await interaction.editReply({
         content: "❌ Formato inválido! Use o formato: Mapa - Modo",
       });
       return;
     }
 
-    const [mapName, mode] = parts;
+    // O último elemento é sempre o modo
+    const mode = parts[parts.length - 1];
+    // O nome do mapa é tudo antes do último elemento
+    const mapName = parts.slice(0, -1).join(" - ");
 
     const userCollection = await mongoHelper.getCollection<User>("user");
     const user = await userCollection.findOne({ discordUserId: discordId });
@@ -69,8 +73,7 @@ export class RemoveFavoriteMapCommand implements Command {
     const favoriteMaps = user.favoriteMaps || [];
 
     const index = favoriteMaps.findIndex(
-      (map) =>
-        map.name === mapName && map.mode === mode
+      (map) => map.name === mapName && map.mode === mode
     );
 
     if (index === -1) {
