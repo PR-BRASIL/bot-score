@@ -45,5 +45,4 @@ export interface Clan {
 export interface GetTopClans {
   getTopClans(limit: number): Promise<Clan[]>;
   getClanByName(clanName: string): Promise<Clan | null>;
-  findSimilarClans(clanName: string, limit?: number): Promise<Clan[]>;
 }

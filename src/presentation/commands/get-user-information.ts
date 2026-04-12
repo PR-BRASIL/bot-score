@@ -14,14 +14,11 @@ import { GetPatentProgress } from "../../utils/getPatentProgress";
 import { mongoHelper } from "../../infra/db/mongodb/helpers/mongo-helper";
 import type { User } from "../../domain/models/user";
 import { extractPlayerName } from "../../utils/clanUtils";
+import { escapeRegex } from "../../utils/escape-regex";
 
 const AUTOCOMPLETE_CHOICE_NAME_MAX = 100;
 const AUTOCOMPLETE_CHOICE_VALUE_MAX = 100;
 const AUTOCOMPLETE_LIMIT = 25;
-
-function escapeRegexForAutocomplete(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
 
 export class GetUserInformationCommand implements Command {
   public constructor(
@@ -197,7 +194,7 @@ export class GetUserInformationCommand implements Command {
       return;
     }
 
-    const q = escapeRegexForAutocomplete(focused.value.trim());
+    const q = escapeRegex(focused.value.trim());
     const regex = new RegExp(q, "i");
     const userCollection = await mongoHelper.getCollection<User>("user");
     const users = await userCollection

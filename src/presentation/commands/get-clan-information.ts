@@ -38,37 +38,11 @@ export class GetClanInformationCommand implements Command {
       return;
     }
 
-    // 🚀 OTIMIZAÇÃO: Buscar clã específico diretamente
-    let clan = await this.getTopClansRepository.getClanByName(clanNameParam);
-
-    // Se não encontrou o clã exato, buscar clãs similares
-    if (!clan) {
-      const similarClans = await this.getTopClansRepository.findSimilarClans(
-        clanNameParam,
-        5
-      );
-
-      if (similarClans.length === 1) {
-        // Se houver apenas um resultado similar, buscar os dados completos
-        clan = await this.getTopClansRepository.getClanByName(
-          similarClans[0].name
-        );
-      } else if (similarClans.length > 1) {
-        // Se houver múltiplos resultados, mostrar sugestões
-        const clanList = similarClans
-          .map((c) => `• **${c.name}** (${c.memberCount} membros)`)
-          .join("\n");
-
-        await interaction.editReply({
-          content: `Encontrei ${similarClans.length} clãs que correspondem à sua pesquisa. Por favor, seja mais específico:\n${clanList}`,
-        });
-        return;
-      }
-    }
+    const clan = await this.getTopClansRepository.getClanByName(clanNameParam);
 
     if (!clan) {
       await interaction.editReply({
-        content: `Nenhum clã encontrado com "${clanNameParam}". Verifique se o nome está correto. Apenas listamos os melhores 25 clãs.`,
+        content: `Nenhum clã encontrado com "${clanNameParam}". Use o autocomplete do comando para escolher o nome exato do clã.`,
       });
       return;
     }
@@ -351,7 +325,7 @@ export class GetClanInformationCommand implements Command {
     }
 
     const clanMgmt = new MongoClanManagementRepository(() => {});
-    const rows = await clanMgmt.findClansForSuperAdminAutocomplete(
+    const rows = await clanMgmt.findClansWithMembersForAutocomplete(
       focused.value.trim(),
       CLAN_AUTOCOMPLETE_LIMIT
     );

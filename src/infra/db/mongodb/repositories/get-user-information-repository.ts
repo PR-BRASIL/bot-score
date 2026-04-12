@@ -8,7 +8,8 @@ import {
 } from "../../../../domain/usecase/get-user-information";
 import { User } from "../../../../domain/models/user";
 import { mongoHelper } from "../helpers/mongo-helper";
-import { extractClanName } from "../../../../utils/clanUtils";
+/** Igualdade de nome de clã sem regex (case-insensitive). */
+const CLAN_NAME_COLLATION = { locale: "pt", strength: 2 } as const;
 
 export class MongoGetUserInformationRepository
   implements GetTopPlayers, GetTopClans
@@ -40,13 +41,11 @@ export class MongoGetUserInformationRepository
     this.collection = await mongoHelper.getCollection("user");
     const clanCollection = await mongoHelper.getCollection("clan");
 
-    // Busca exata primeiro, depois por similaridade
-    const clanData = await clanCollection.findOne({
-      $or: [
-        { name: { $regex: new RegExp(`^${clanName}$`, "i") } }, // Busca exata
-        { name: { $regex: new RegExp(clanName, "i") } }, // Busca por similaridade
-      ],
-    });
+    const trimmed = clanName.trim();
+    const clanData = await clanCollection.findOne(
+      { name: trimmed },
+      { collation: CLAN_NAME_COLLATION }
+    );
 
     if (!clanData) return null;
 
@@ -141,47 +140,6 @@ export class MongoGetUserInformationRepository
       totalDeaths: clanData.totalDeaths || 0,
       totalTimeOnline: clanData.totalTimeOnline || 0,
       members: (clanData.members || []) as User[],
-      leaderDiscordIds: clanData.leaderDiscordIds ?? [],
-      leaderHashes: clanData.leaderHashes ?? [],
-    }));
-
-    // Cache o resultado
-    this.setCachedData(cacheKey, clans);
-
-    return clans;
-  }
-
-  // Método para buscar clãs similares de forma otimizada
-  async findSimilarClans(clanName: string, limit: number = 5): Promise<Clan[]> {
-    const cacheKey = `similar_${clanName.toLowerCase()}_${limit}`;
-    const cached = this.getCachedData(cacheKey);
-
-    if (cached) {
-      return cached;
-    }
-
-    const clanCollection = await mongoHelper.getCollection("clan");
-
-    const clansData = await clanCollection
-      .find({
-        name: { $regex: new RegExp(clanName, "i") },
-      })
-      .limit(limit)
-      .toArray();
-
-    if (!clansData.length) return [];
-
-    // Buscar apenas informações básicas para a lista de sugestões
-    const clans: Clan[] = clansData.map((clanData) => ({
-      name: clanData.name,
-      memberCount: clanData.membersHash?.length || 0,
-      points: clanData.points || 0,
-      totalScore: 0,
-      totalTeamWorkScore: 0,
-      totalKills: 0,
-      totalDeaths: 0,
-      totalTimeOnline: 0,
-      members: [],
       leaderDiscordIds: clanData.leaderDiscordIds ?? [],
       leaderHashes: clanData.leaderHashes ?? [],
     }));

@@ -2,6 +2,23 @@ import type { Document, ObjectId } from "mongodb";
 import { mongoHelper } from "../helpers/mongo-helper";
 import { MongoGetUserInformationRepository } from "./get-user-information-repository";
 
+const CLAN_NAME_COLLATION = { locale: "pt", strength: 2 } as const;
+
+/** Quantidade máxima de clãs lidos do banco antes de filtrar o texto no autocomplete. */
+const CLAN_AUTOCOMPLETE_SCAN_LIMIT = 400;
+
+function sliceClansByNameSubstring(
+  docs: { name: string }[],
+  nameSearch: string,
+  resultLimit: number
+): { name: string }[] {
+  const q = nameSearch.trim().toLowerCase();
+  const filtered = q
+    ? docs.filter((d) => d.name.toLowerCase().includes(q))
+    : docs;
+  return filtered.slice(0, resultLimit);
+}
+
 export interface ClanManagementDocument {
   _id: ObjectId;
   name: string;
@@ -10,10 +27,6 @@ export interface ClanManagementDocument {
   adminDiscordIds?: string[];
   leaderHashes?: string[];
   adminHashes?: string[];
-}
-
-function escapeRegex(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 /** Após vincular Discord: reflete ids nas coleções de clã e limpa cache. */
@@ -52,18 +65,16 @@ export class MongoClanManagementRepository {
       orConditions.push({ leaderHashes: playerHash });
     }
     const filter: Record<string, unknown> = { $or: orConditions };
-    if (nameSearch.trim()) {
-      filter.name = {
-        $regex: escapeRegex(nameSearch.trim()),
-        $options: "i",
-      };
-    }
     const docs = await clanCollection
       .find(filter, { projection: { name: 1 } })
       .sort({ points: -1 })
-      .limit(limit)
+      .limit(CLAN_AUTOCOMPLETE_SCAN_LIMIT)
       .toArray();
-    return docs.map((d: { name: string }) => ({ name: d.name }));
+    return sliceClansByNameSubstring(
+      docs as { name: string }[],
+      nameSearch,
+      limit
+    );
   }
 
   /** Clãs onde o jogador é líder ou admin (para autocomplete). */
@@ -83,18 +94,16 @@ export class MongoClanManagementRepository {
       orConditions.push({ adminHashes: playerHash });
     }
     const filter: Record<string, unknown> = { $or: orConditions };
-    if (nameSearch.trim()) {
-      filter.name = {
-        $regex: escapeRegex(nameSearch.trim()),
-        $options: "i",
-      };
-    }
     const docs = await clanCollection
       .find(filter, { projection: { name: 1 } })
       .sort({ points: -1 })
-      .limit(limit)
+      .limit(CLAN_AUTOCOMPLETE_SCAN_LIMIT)
       .toArray();
-    return docs.map((d: { name: string }) => ({ name: d.name }));
+    return sliceClansByNameSubstring(
+      docs as { name: string }[],
+      nameSearch,
+      limit
+    );
   }
 
   /** Lista de clãs para super admin (set-leader). */
@@ -103,28 +112,49 @@ export class MongoClanManagementRepository {
     limit: number
   ): Promise<{ name: string }[]> {
     const clanCollection = await mongoHelper.getCollection("clan");
-    const filter = nameSearch.trim()
-      ? { name: { $regex: escapeRegex(nameSearch.trim()), $options: "i" } }
-      : {};
     const docs = await clanCollection
-      .find(filter, { projection: { name: 1 } })
+      .find({}, { projection: { name: 1 } })
       .sort({ points: -1 })
-      .limit(limit)
+      .limit(CLAN_AUTOCOMPLETE_SCAN_LIMIT)
       .toArray();
-    return docs.map((d: { name: string }) => ({ name: d.name }));
+    return sliceClansByNameSubstring(
+      docs as { name: string }[],
+      nameSearch,
+      limit
+    );
+  }
+
+  /** Lista de clãs com pelo menos um membro (autocomplete /clanstats). */
+  async findClansWithMembersForAutocomplete(
+    nameSearch: string,
+    limit: number
+  ): Promise<{ name: string }[]> {
+    const clanCollection = await mongoHelper.getCollection("clan");
+    const hasMembers = {
+      $expr: {
+        $gt: [{ $size: { $ifNull: ["$membersHash", []] } }, 0],
+      },
+    };
+    const docs = await clanCollection
+      .find(hasMembers, { projection: { name: 1 } })
+      .sort({ points: -1 })
+      .limit(CLAN_AUTOCOMPLETE_SCAN_LIMIT)
+      .toArray();
+    return sliceClansByNameSubstring(
+      docs as { name: string }[],
+      nameSearch,
+      limit
+    );
   }
 
   async findClanDocument(
     clanName: string
   ): Promise<ClanManagementDocument | null> {
     const clanCollection = await mongoHelper.getCollection("clan");
-    const escaped = escapeRegex(clanName.trim());
-    const doc = await clanCollection.findOne({
-      $or: [
-        { name: { $regex: new RegExp(`^${escaped}$`, "i") } },
-        { name: { $regex: new RegExp(escaped, "i") } },
-      ],
-    });
+    const doc = await clanCollection.findOne(
+      { name: clanName.trim() },
+      { collation: CLAN_NAME_COLLATION }
+    );
     return doc as ClanManagementDocument | null;
   }
 
