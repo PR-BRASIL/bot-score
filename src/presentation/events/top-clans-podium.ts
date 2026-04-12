@@ -45,7 +45,7 @@ export class TopClansPodium {
         "Ranking dos melhores clãs do Reality Brasil!\n" +
           "⚡ **DICA PARA CLÃS:** Incentive seus membros a jogar entre 7h e 14h para ganhar o **DOBRO** de pontuação!\n" +
           "Utilize o comando `/stats` para ver as informações de um jogador específico.\n" +
-          "Utilize o comando `/clastats` para ver as informações de um clã específico."
+          "Utilize o comando `/clanstats` para ver as informações de um clã específico."
       )
       .setTimestamp()
       .setImage(

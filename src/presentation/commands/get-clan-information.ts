@@ -1,5 +1,6 @@
 import {
   EmbedBuilder,
+  type AutocompleteInteraction,
   type ChatInputCommandInteraction,
   ActionRowBuilder,
   ButtonBuilder,
@@ -11,8 +12,12 @@ import type {
   GetTopClans,
   Clan,
 } from "../../domain/usecase/get-user-information";
-import { extractClanName } from "../../utils/clanUtils";
 import { calculateTotalOnlineTime } from "../../utils/calculate-time-util";
+import { MongoClanManagementRepository } from "../../infra/db/mongodb/repositories/clan-management-repository";
+
+const CLAN_AUTOCOMPLETE_NAME_MAX = 100;
+const CLAN_AUTOCOMPLETE_VALUE_MAX = 100;
+const CLAN_AUTOCOMPLETE_LIMIT = 25;
 
 export class GetClanInformationCommand implements Command {
   public constructor(private readonly getTopClansRepository: GetTopClans) {}
@@ -235,6 +240,47 @@ export class GetClanInformationCommand implements Command {
 
     const totalTimeOnline = calculateTotalOnlineTime(clan.totalTimeOnline);
 
+    const leaderIdsConfigured = (clan.leaderDiscordIds ?? []).filter(
+      (id): id is string => typeof id === "string" && id.length > 0
+    );
+    const leaderHashesConfigured = (clan.leaderHashes ?? []).filter(
+      (h): h is string => typeof h === "string" && h.length > 0
+    );
+
+    const linesFromDiscord = leaderIdsConfigured.map((discordId) => {
+      const member = clan.members.find((m) => m.discordUserId === discordId);
+      if (member) {
+        return `👑 **${member.name}** · <@${discordId}>`;
+      }
+      return `👑 <@${discordId}>`;
+    });
+
+    const linesFromHashOnly = leaderHashesConfigured
+      .filter((hash) => {
+        const member = clan.members.find((m) => m.hash === hash);
+        if (member?.discordUserId) {
+          return !leaderIdsConfigured.includes(member.discordUserId);
+        }
+        return true;
+      })
+      .map((hash) => {
+        const member = clan.members.find((m) => m.hash === hash);
+        if (member) {
+          return `👑 **${member.name}** _(sem Discord vinculado — após vincular, poderá usar os comandos de líder)_`;
+        }
+        return `👑 _hash ${hash.slice(0, 8)}…_ _(fora da lista de membros carregada)_`;
+      });
+
+    const leadershipLines = [...linesFromDiscord, ...linesFromHashOnly];
+    const leadershipField =
+      leadershipLines.length > 0
+        ? {
+            name: "👑 Liderança do clã",
+            value: leadershipLines.join("\n"),
+            inline: false as const,
+          }
+        : null;
+
     const embed = new EmbedBuilder()
       .setColor(0x1abc9c)
       .setAuthor({
@@ -251,7 +297,13 @@ export class GetClanInformationCommand implements Command {
           )} com **${clan.points.toLocaleString("pt-BR")}** pontos\n` +
           `⚡ **DICA PARA CLÃS:** Incentive seus membros a jogar entre 7h e 14h para ganhar o **DOBRO** de pontuação!\n` +
           `📄 Página ${currentPage + 1}/${totalPages}`
-      )
+      );
+
+    if (leadershipField) {
+      embed.addFields(leadershipField);
+    }
+
+    embed
       .addFields({
         name: "📈 Estatísticas do Clã",
         value:
@@ -283,5 +335,39 @@ export class GetClanInformationCommand implements Command {
     });
 
     return embed;
+  }
+
+  public static async handleAutocomplete(
+    interaction: AutocompleteInteraction
+  ): Promise<void> {
+    const focused = interaction.options.getFocused(true);
+    if (focused.name !== "clan-name") {
+      await interaction.respond([]);
+      return;
+    }
+    if (!focused.value.trim()) {
+      await interaction.respond([]);
+      return;
+    }
+
+    const clanMgmt = new MongoClanManagementRepository(() => {});
+    const rows = await clanMgmt.findClansForSuperAdminAutocomplete(
+      focused.value.trim(),
+      CLAN_AUTOCOMPLETE_LIMIT
+    );
+
+    await interaction.respond(
+      rows.map((r) => {
+        let name = r.name;
+        if (name.length > CLAN_AUTOCOMPLETE_NAME_MAX) {
+          name = name.slice(0, CLAN_AUTOCOMPLETE_NAME_MAX - 1) + "…";
+        }
+        let value = r.name;
+        if (value.length > CLAN_AUTOCOMPLETE_VALUE_MAX) {
+          value = value.slice(0, CLAN_AUTOCOMPLETE_VALUE_MAX);
+        }
+        return { name, value };
+      })
+    );
   }
 }

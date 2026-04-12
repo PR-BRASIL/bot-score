@@ -3,6 +3,14 @@ import { config } from "dotenv";
 
 config();
 
+function parseCommaSeparatedDiscordIds(raw: string | undefined): string[] {
+  if (!raw?.trim()) return [];
+  return raw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 export const env = {
   token: process.env.TOKEN,
   port: process.env.PORT || 2020,
@@ -15,4 +23,7 @@ export const env = {
   patentsInfoChannelId: process.env.PATENTS_INFO_CHANNEL_ID,
   monthlyTopPlayersChannelId: process.env.MONTHLY_TOP_PLAYERS_CHANNEL_ID,
   monthlySeasonEndChannelId: process.env.MONTHLY_SEASON_END_CHANNEL_ID,
+  clanSuperAdminDiscordIds: parseCommaSeparatedDiscordIds(
+    process.env.CLAN_SUPER_ADMIN_DISCORD_IDS
+  ),
 };

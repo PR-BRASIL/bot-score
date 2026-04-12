@@ -36,6 +36,10 @@ export interface Clan {
   totalTimeOnline: number;
   points: number;
   members: User[];
+  /** Discord user IDs definidos como líderes do clã (comando /clan-admin). */
+  leaderDiscordIds?: string[];
+  /** Hashes de jogadores líderes (podem ainda não ter Discord vinculado). */
+  leaderHashes?: string[];
 }
 
 export interface GetTopClans {

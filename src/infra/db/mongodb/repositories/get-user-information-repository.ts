@@ -62,6 +62,7 @@ export class MongoGetUserInformationRepository
         totalTime: 1,
         updatedAt: 1,
         hash: 1,
+        discordUserId: 1,
       })
       .toArray();
 
@@ -104,6 +105,7 @@ export class MongoGetUserInformationRepository
                 totalTime: 1,
                 updatedAt: 1,
                 hash: 1,
+                discordUserId: 1,
               },
             },
           ],
@@ -139,6 +141,8 @@ export class MongoGetUserInformationRepository
       totalDeaths: clanData.totalDeaths || 0,
       totalTimeOnline: clanData.totalTimeOnline || 0,
       members: (clanData.members || []) as User[],
+      leaderDiscordIds: clanData.leaderDiscordIds ?? [],
+      leaderHashes: clanData.leaderHashes ?? [],
     }));
 
     // Cache o resultado
@@ -178,6 +182,8 @@ export class MongoGetUserInformationRepository
       totalDeaths: 0,
       totalTimeOnline: 0,
       members: [],
+      leaderDiscordIds: clanData.leaderDiscordIds ?? [],
+      leaderHashes: clanData.leaderHashes ?? [],
     }));
 
     // Cache o resultado
@@ -209,6 +215,8 @@ export class MongoGetUserInformationRepository
       totalDeaths,
       totalTimeOnline,
       members,
+      leaderDiscordIds: clanData.leaderDiscordIds ?? [],
+      leaderHashes: clanData.leaderHashes ?? [],
     };
   }
 

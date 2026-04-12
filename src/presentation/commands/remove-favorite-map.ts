@@ -100,6 +100,11 @@ export class RemoveFavoriteMapCommand implements Command {
     const focusedOption = interaction.options.getFocused(true);
     const discordId = interaction.user.id;
 
+    if (!focusedOption.value.trim()) {
+      await interaction.respond([]);
+      return;
+    }
+
     if (focusedOption.name === "mapa") {
       const userCollection = await mongoHelper.getCollection<User>("user");
       const user = await userCollection.findOne({ discordUserId: discordId });

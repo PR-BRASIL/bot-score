@@ -1,5 +1,6 @@
 import {
   EmbedBuilder,
+  type AutocompleteInteraction,
   type ChatInputCommandInteraction,
   type GuildMember,
 } from "discord.js";
@@ -12,6 +13,15 @@ import { getPatent } from "../../utils/patents";
 import { GetPatentProgress } from "../../utils/getPatentProgress";
 import { mongoHelper } from "../../infra/db/mongodb/helpers/mongo-helper";
 import type { User } from "../../domain/models/user";
+import { extractPlayerName } from "../../utils/clanUtils";
+
+const AUTOCOMPLETE_CHOICE_NAME_MAX = 100;
+const AUTOCOMPLETE_CHOICE_VALUE_MAX = 100;
+const AUTOCOMPLETE_LIMIT = 25;
+
+function escapeRegexForAutocomplete(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 export class GetUserInformationCommand implements Command {
   public constructor(
@@ -172,5 +182,46 @@ export class GetUserInformationCommand implements Command {
     });
 
     return embed;
+  }
+
+  public static async handleAutocomplete(
+    interaction: AutocompleteInteraction
+  ): Promise<void> {
+    const focused = interaction.options.getFocused(true);
+    if (focused.name !== "hash-or-name") {
+      await interaction.respond([]);
+      return;
+    }
+    if (!focused.value.trim()) {
+      await interaction.respond([]);
+      return;
+    }
+
+    const q = escapeRegexForAutocomplete(focused.value.trim());
+    const regex = new RegExp(q, "i");
+    const userCollection = await mongoHelper.getCollection<User>("user");
+    const users = await userCollection
+      .find<User>(
+        { $or: [{ name: regex }, { hash: regex }] },
+        { projection: { name: 1, hash: 1 } }
+      )
+      .limit(AUTOCOMPLETE_LIMIT)
+      .toArray();
+
+    await interaction.respond(
+      users.map((u) => {
+        const base =
+          extractPlayerName(u.name || "") || u.name || u.hash;
+        let name = `${base} • ${u.hash}`;
+        if (name.length > AUTOCOMPLETE_CHOICE_NAME_MAX) {
+          name = name.slice(0, AUTOCOMPLETE_CHOICE_NAME_MAX - 1) + "…";
+        }
+        let value = u.hash;
+        if (value.length > AUTOCOMPLETE_CHOICE_VALUE_MAX) {
+          value = value.slice(0, AUTOCOMPLETE_CHOICE_VALUE_MAX);
+        }
+        return { name, value };
+      })
+    );
   }
 }

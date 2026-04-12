@@ -97,7 +97,7 @@ export class PatentsInfo {
     embed.addFields({
       name: "🚀 Como subir de patente?",
       value:
-        "```diff\n+ Jogue no servidor Reality Brasil\n+ Cada kill, assistência e objetivo concluído aumenta seu score\n+ Jogue entre 7h e 14h para ganhar DOBRO de pontuação!\n+ Acompanhe seu progresso com /stats\n+ Acompanhe o progresso do seu clã com /clastats```",
+        "```diff\n+ Jogue no servidor Reality Brasil\n+ Cada kill, assistência e objetivo concluído aumenta seu score\n+ Jogue entre 7h e 14h para ganhar DOBRO de pontuação!\n+ Acompanhe seu progresso com /stats\n+ Acompanhe o progresso do seu clã com /clanstats```",
       inline: false,
     });
 

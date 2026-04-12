@@ -208,6 +208,11 @@ class DiscordLinkService {
       }
     );
 
+    const { syncClanDiscordIdsAfterUserLinks } = await import(
+      "../../infra/db/mongodb/repositories/clan-management-repository"
+    );
+    await syncClanDiscordIdsAfterUserLinks(player.hash, discordUserId);
+
     await linkCollection.updateOne(
       { requestId },
       {

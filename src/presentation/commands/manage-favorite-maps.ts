@@ -198,6 +198,11 @@ export class ManageFavoriteMapsCommand implements Command {
   ): Promise<void> {
     const focusedOption = interaction.options.getFocused(true);
 
+    if (!focusedOption.value.trim()) {
+      await interaction.respond([]);
+      return;
+    }
+
     if (focusedOption.name === "mapa") {
       // Mostrar todos os mapas disponíveis
       const searchValue = focusedOption.value.toLowerCase();
