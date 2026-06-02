@@ -5,6 +5,7 @@ export interface GetUserInformationInput {
 }
 
 export interface GetUserInformationOutput {
+  _id?: import("mongodb").ObjectId | string;
   name: string;
   teamWorkScore: number;
   kills: number;

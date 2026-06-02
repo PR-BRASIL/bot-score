@@ -73,6 +73,12 @@ export class GetUserInformationCommand implements Command {
       ? new Date(userData.updatedAt).toLocaleDateString("pt-BR")
       : "N/A";
 
+    const registeredAt = userData._id
+      ? new Date(
+          parseInt(String(userData._id).substring(0, 8), 16) * 1000
+        ).toLocaleDateString("pt-BR")
+      : "N/A";
+
     // Ranking mensal (se o jogador estiver na coleção mensal)
     let monthlyRankingLine = "";
     try {
@@ -152,7 +158,8 @@ export class GetUserInformationCommand implements Command {
       `> 🏆 **Posição no Ranking:** #${userData.rank.toLocaleString(
         "pt-BR"
       )}\n` +
-      `> 📅 **Último jogo:** ${lastPlayed}\n`;
+      `> 📅 **Último jogo:** ${lastPlayed}\n` +
+      `> 🗓️ **Primeiro registro:** ${registeredAt}\n`;
 
     const discordMention = userData.discordUserId
       ? `> 💬 **Discord:** <@${userData.discordUserId}>\n`
