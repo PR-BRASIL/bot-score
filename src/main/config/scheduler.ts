@@ -11,11 +11,19 @@ import { TextChannel, EmbedBuilder } from "discord.js";
 export function scheduleTopPlayersPodium(client: Client): void {
   const getUserInformation = new MongoGetUserInformationRepository();
   const podium = new TopPlayersPodium(getUserInformation);
-  // every 10 minutes
-  cron.schedule("*/10 * * * *", async () => {
+
+  const run = async () => {
     console.log("Updating top players podium...");
-    await podium.updatePodium(client);
-  });
+    try {
+      await podium.updatePodium(client);
+    } catch (err) {
+      console.error("Failed to update top players podium", err);
+    }
+  };
+
+  // Roda na inicialização e a cada 10 minutos
+  void run();
+  cron.schedule("*/10 * * * *", run);
 }
 
 export function scheduleTopClansPodium(client: Client): void {
@@ -68,7 +76,7 @@ export function scheduleMonthlyTopPlayers(client: Client): void {
 
     // Envia anúncio do fim da temporada com Top 3
     const channel = client.channels.cache.get(
-      env.monthlySeasonEndChannelId as string
+      env.monthlySeasonEndChannelId as string,
     ) as TextChannel | undefined;
     if (channel) {
       const embed = new EmbedBuilder()
@@ -80,10 +88,10 @@ export function scheduleMonthlyTopPlayers(client: Client): void {
         .setTitle(`🏁 Fim da Temporada Mensal — ${seasonLabel}`)
         .setDescription(
           "A temporada mensal foi encerrada e as pontuações foram resetadas.\n" +
-            "Parabéns aos campeões! A nova temporada já começou — boa sorte!"
+            "Parabéns aos campeões! A nova temporada já começou — boa sorte!",
         )
         .setImage(
-          "https://media.discordapp.net/attachments/1162222580644708372/1274439425354371072/Capa_GitBook.png?ex=67df05b4&is=67ddb434&hm=e7f9eb86c1d74c0e1de0414f3dab11023f0820ea8431edfe0812e5afe80de930&=&format=webp&quality=lossless"
+          "https://media.discordapp.net/attachments/1162222580644708372/1274439425354371072/Capa_GitBook.png?ex=67df05b4&is=67ddb434&hm=e7f9eb86c1d74c0e1de0414f3dab11023f0820ea8431edfe0812e5afe80de930&=&format=webp&quality=lossless",
         )
         .setTimestamp();
 
@@ -93,7 +101,7 @@ export function scheduleMonthlyTopPlayers(client: Client): void {
           embed.addFields({
             name: `<a:first:1353055748262989867> 1º — ${first.name}`,
             value: `> ⭐ **Pontos:** ${first.score.toLocaleString(
-              "pt-BR"
+              "pt-BR",
             )}\n> ㅤ`,
             inline: true,
           });
@@ -102,7 +110,7 @@ export function scheduleMonthlyTopPlayers(client: Client): void {
           embed.addFields({
             name: `🥈 2º — ${second.name}`,
             value: `> ⭐ **Pontos:** ${second.score.toLocaleString(
-              "pt-BR"
+              "pt-BR",
             )}\n> ㅤ`,
             inline: true,
           });
@@ -111,7 +119,7 @@ export function scheduleMonthlyTopPlayers(client: Client): void {
           embed.addFields({
             name: `🥉 3º — ${third.name}`,
             value: `> ⭐ **Pontos:** ${third.score.toLocaleString(
-              "pt-BR"
+              "pt-BR",
             )}\n> ㅤ`,
             inline: true,
           });

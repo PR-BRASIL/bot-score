@@ -56,10 +56,10 @@ export class TopPlayersPodium {
         "https://media.discordapp.net/attachments/1162222580644708372/1274439425354371072/Capa_GitBook.png?ex=67df05b4&is=67ddb434&hm=e7f9eb86c1d74c0e1de0414f3dab11023f0820ea8431edfe0812e5afe80de930&=&format=webp&quality=lossless",
       );
 
-    // Display players 25 to 4 first
+    // Display players from bottom to just above top 3
     const restPlayers = topPlayers.slice(0, -3);
     for (const [index, player] of restPlayers.entries()) {
-      const position = 25 - index; // Calculate correct position
+      const position = topPlayers.length - index;
       const patent = (await getPatent(player.score)).split(" <");
       const lastPlayed = player.updatedAt
         ? new Date(player.updatedAt).toLocaleDateString("pt-BR")
