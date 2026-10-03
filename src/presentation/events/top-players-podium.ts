@@ -14,7 +14,7 @@ export class TopPlayersPodium {
 
   public async updatePodium(client: Client): Promise<void> {
     const channel = client.channels.cache.get(
-      env.topPlayersPodiumChannelId
+      env.topPlayersPodiumChannelId,
     ) as TextChannel;
     if (!channel) {
       return;
@@ -29,7 +29,7 @@ export class TopPlayersPodium {
       }
     }
 
-    const topPlayers = await this.getTopPlayers.getTopPlayers(25);
+    const topPlayers = await this.getTopPlayers.getTopPlayers(20);
     if (!topPlayers || topPlayers.length === 0) {
       return;
     }
@@ -43,17 +43,17 @@ export class TopPlayersPodium {
         name: "Reality Brasil",
         iconURL: channel.guild.iconURL() || undefined,
       })
-      .setTitle("🏆 Top 25 Melhores Jogadores")
+      .setTitle("🏆 Top 20 Melhores Jogadores")
       .setDescription(
         "Ranking dos melhores jogadores do Reality Brasil!\n" +
           "⚡ **DICA:** Jogue entre 7h e 14h para ganhar o **DOBRO** de pontuação!\n" +
           "Utilize o comando `/stats` para ver as informações de um jogador específico.\n" +
           "Utilize o comando `/clanstats` para ver as informações de um clã específico. \n" +
-          "Utilize o comando `/ranking` para ver sua posição, ou dos outros no ranking"
+          "Utilize o comando `/ranking` para ver sua posição, ou dos outros no ranking",
       )
       .setTimestamp()
       .setImage(
-        "https://media.discordapp.net/attachments/1162222580644708372/1274439425354371072/Capa_GitBook.png?ex=67df05b4&is=67ddb434&hm=e7f9eb86c1d74c0e1de0414f3dab11023f0820ea8431edfe0812e5afe80de930&=&format=webp&quality=lossless"
+        "https://media.discordapp.net/attachments/1162222580644708372/1274439425354371072/Capa_GitBook.png?ex=67df05b4&is=67ddb434&hm=e7f9eb86c1d74c0e1de0414f3dab11023f0820ea8431edfe0812e5afe80de930&=&format=webp&quality=lossless",
       );
 
     // Display players 25 to 4 first
@@ -70,11 +70,11 @@ export class TopPlayersPodium {
         value: `> \n> **<${patent[1]} ${
           patent[0]
         }**\n> \n> ⭐ **Score:** ${player.score.toLocaleString(
-          "pt-BR"
+          "pt-BR",
         )}\n> 🎮 **Partidas:** ${player.rounds || 0}\n> 🎯 **K/D:** ${
           player.kills
         } / ${player.deaths} (${(player.kills / player.deaths).toFixed(
-          2
+          2,
         )})\n> 📅 **Último jogo:** ${lastPlayed}`,
         inline: false,
       });
@@ -96,11 +96,11 @@ export class TopPlayersPodium {
         value: `> \n> **<${patent[1] || ""} ${
           patent[0]
         }**\n> \n> ⭐ **Score:** ${third.score.toLocaleString(
-          "pt-BR"
+          "pt-BR",
         )}\n> 🎮 **Partidas:** ${
           third.rounds || 0
         }\n> 🤝 **Teamwork:** ${third.teamWorkScore.toLocaleString(
-          "pt-BR"
+          "pt-BR",
         )}\n> 🎯 **K/D:** ${third.kills} / ${third.deaths} (${(
           third.kills / third.deaths
         ).toFixed(2)})\n> 📅 **Último jogo:** ${lastPlayed}\n> **${progress}**`,
@@ -121,11 +121,11 @@ export class TopPlayersPodium {
         value: `> \n> **<${patent[1] || ""} ${
           patent[0]
         }**\n> \n> ⭐ **Score:** ${second.score.toLocaleString(
-          "pt-BR"
+          "pt-BR",
         )}\n> 🎮 **Partidas:** ${
           second.rounds || 0
         }\n> 🤝 **Teamwork:** ${second.teamWorkScore.toLocaleString(
-          "pt-BR"
+          "pt-BR",
         )}\n> 🎯 **K/D:** ${second.kills} / ${second.deaths} (${(
           second.kills / second.deaths
         ).toFixed(2)})\n> 📅 **Último jogo:** ${lastPlayed}\n> **${progress}**`,
@@ -146,11 +146,11 @@ export class TopPlayersPodium {
         value: `> \n> **<${patent[1] || ""} ${
           patent[0]
         }**\n> \n> ⭐ **Score:** ${first.score.toLocaleString(
-          "pt-BR"
+          "pt-BR",
         )}\n> 🎮 **Partidas:** ${
           first.rounds || 0
         }\n> 🤝 **Teamwork:** ${first.teamWorkScore.toLocaleString(
-          "pt-BR"
+          "pt-BR",
         )}\n> 🎯 **K/D:** ${first.kills} / ${first.deaths} (${(
           first.kills / first.deaths
         ).toFixed(2)})\n> 📅 **Último jogo:** ${lastPlayed}\n> **${progress}**`,
