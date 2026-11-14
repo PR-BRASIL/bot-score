@@ -1,8 +1,8 @@
 module.exports = {
   apps: [
     {
-      name: "client-tracker",
-      cwd: "/root/trackers/client-tracker",
+      name: "bot-score",
+      cwd: "/root/trackers/bot-score",
       script: "npm",
       args: "start",
       autorestart: true,
